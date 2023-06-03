@@ -32,6 +32,15 @@
             </div>
          <!--Filter Section-->
              <div class="filter-box">
+               <select id="filter-select-filter"  class="filter-select">
+                 <option value="" disabled selected>Sort</option>
+                 <option value="Price(Highest - Lowest)" id="SortByModel">Sort by Prices(Highest - Lowest)</option>
+                 <option value="Price(Lowest - Highest)" id="SortByBrand">Sort by Prices(Lowest - Highest)</option>
+                 <option value="Alcohol Content(Highest - Lowest)" id="SortByCarType">Sort by Alcohol Content(Highest - Lowest)</option>
+                 <option value="Alcohol Content(Lowest - Highest)" id="SortByCarType">Sort by Alcohol Content(Lowest - Highest)</option>
+               </select>  
+             </div>
+             <div class="filter-box">
                <select id="filter-select-sort"  class="filter-select">
                  <option value="" disabled selected>Sort</option>
                  <option value="Price(Highest - Lowest)" id="SortByModel">Sort by Prices(Highest - Lowest)</option>
