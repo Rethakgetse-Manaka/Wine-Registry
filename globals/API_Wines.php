@@ -44,11 +44,10 @@
         //Get Wines function
         public function getWines($data) {
             //Searching of getWines
-            $sql = "SELECT Wine.Name, Grape_Varietal.Name as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.Location_Name, Region.Country, Wine.Image 
-                    FROM Wine 
-                    INNER JOIN Quality ON Wine.WineID = Quality.WineID 
+            $sql = "SELECT Wine.Name, Grape_Varietal.VarietalName as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Wine.Image 
+                    FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID 
                     INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID 
-                    INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.Varietal_ID 
+                    INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID 
                     INNER JOIN Region ON Winery.RegionID = Region.RegionID ";
             if((isset($data->search))){
                 $sql .= " Where Wine.Name LIKE '%" .$data->search->Name ."%'"; 
@@ -100,7 +99,11 @@
             }
         }
         public function getRegions($data){
-            $stmt = $this->conn->prepare('SELECT RegionName,Climate,Country,Image FROM Region');
+            $sql = "SELECT RegionName,Climate,Country,Image FROM Region Order by RegionName ";
+            if((isset($data->order))){
+                $sql .= $data->order ." ";
+            }
+            $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->get_result();
             if($result->num_rows>0){
