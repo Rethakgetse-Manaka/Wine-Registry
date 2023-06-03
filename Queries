@@ -1,1 +1,9 @@
+GetWines
 
+SELECT Wine.Name, Grape_Varietal.Name as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.Location_Name, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.Varietal_ID INNER JOIN Region ON Winery.RegionID = Region.RegionID;
+
+GetWines Search
+SELECT Wine.Name, Grape_Varietal.Name as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.Location_Name, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.Varietal_ID INNER JOIN Region ON Winery.RegionID = Region.RegionID WHERE Wine.Name = $search;
+
+GetWines Sort
+SELECT Wine.Name, Grape_Varietal.Name as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.Location_Name, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.Varietal_ID INNER JOIN Region ON Winery.RegionID = Region.RegionID ORDER BY $sort;
