@@ -19,13 +19,16 @@
                 <h1>Login</h1>
             </div>
             <div class="flex-input">
+                <input type="text" name="National_ID" id="National_ID" placeholder="ID Number">
+            </div>
+            <div class="flex-input">
                 <input type="email" name="Email" id="Email" placeholder="Email" title="Use your email">
             </div>
             <div class = "flex-input">
                 <input type="password" name="Password" id="Password" placeholder="Password">
             </div>
             <div>
-                <input type="submit" name="Submit" value="Submit">
+                <input type="submit" name="Submit" value="Login">
             </div> 
             <div class="Forgot-password">
                 <a href="#">Forgot Password?</a>
@@ -65,7 +68,7 @@
             margin-bottom: 10px;
             justify-content: center;
         }
-        input[type="email"],[type="password"]{
+        input[type="email"],[type="password"],[type="text"]{
            padding: 10px;
            font-size: 18px;
            width: 100%;
