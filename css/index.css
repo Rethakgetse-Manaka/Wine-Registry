@@ -1,0 +1,33 @@
+.flex-parent {
+    display: flex;
+    top:-50%;
+  }
+  
+  .jc-center {
+    justify-content: center;
+  }
+  
+  button.margin-right {
+    margin-right: 20px;
+    background-color: rgb(56, 56, 56);
+    color: white;
+    border-radius: 3px;
+}
+button:hover{
+    background-color: rgb(241, 241, 241);
+    color: rgb(8, 8, 8);
+    border-radius: 3px;
+}
+
+.logo{
+    display: flex;
+    justify-content: center;
+    top: 10px;
+    
+}
+#title{
+    display: flex; 
+    justify-content: center; 
+    color:white;
+    top:100px;
+}
