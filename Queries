@@ -10,3 +10,6 @@ SELECT Wine.Name, Grape_Varietal.Name as "Grape_Varietal", Wine.Price, Wine.Bott
 
 GetWineries
 SELECT Region.RegionName, Region.Country, Winery.Winemaker, Winery.ProductionSize, Grape_Varietal.VarietalName FROM Winery INNER JOIN Region ON Winery.RegionID = Region.RegionID INNER JOIN Grape_Varietal ON Winery.VarietalID = Grape_Varietal.VarietalID;
+
+GetRatings
+SELECT User.Name, User.Surname, Reviews.Rating, Reviews.Comment FROM User INNER JOIN Reviews ON User.UserID = Reviews.userID;
