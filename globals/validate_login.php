@@ -1,68 +1,64 @@
 <?php 
-   session_start();
-   
-   class Login{
-    private static $instance = null;
-    public $conn;
-    public static function getInstance(){
-        if(self::$instance === null){
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-    private function __construct() {
-        $servername = "wheatley.cs.up.ac.za";
-        $username = "u22491032";
-        $password = "QQ6L47NA3ZLXLPQRPZL66AO35WETQI24";
-        $db_name = "u22491032";
-        $this->conn = mysqli_connect($servername, $username, $password, $db_name);
-    }
-    public function __destruct() {
-        mysqli_close($this->conn);
-    }
-    public function response($success,$message="",$data=""){
-        header("HTTP/1.1 200 OK");
-		header("Content-Type: application/json");
-		
-		echo json_encode([
-			"success" => $success,
-            "timestamp" => time(),
-			"message" => $message,
-			"data" => $data
-		]);
-    }
-    public function validateLogin($data){
-        $email = $data->email;
-        $password = $data->password;
-        $sql = "SELECT * FROM users WHERE email = '$email'";
-        $result = mysqli_query($this->conn, $sql);
-        if(mysqli_num_rows($result) > 0){
-            $row = mysqli_fetch_assoc($result);
-            if(password_verify($password, $row['password'])){
-                $this->response(true,"Login successful",["user_id"=>$row['id'],"apikey"=>$row['api_key']]);
-            }else{
-                $this->response(false,"Incorrect password");
-            }
-        }else{
-            $this->response(false,"User does not exist");
-        }
-    }
-   }
+    
+    // Checking if information has been posted
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Retrieve the form data
+        $National_ID = $_POST["National_ID"];
+        $admin_ID = $_POST['Admin_ID'];
+        $password = $_POST['Password'];
 
-   // Usage:
-   if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        $json = file_get_contents('php://input');
-        $data = json_decode($json);
-        $email = $data->email;
-        $password = $data->password;
-        $login = Login::getInstance();
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-            $login->response(false,"Invalid email");
-            exit();
+        $validInput = false;
+        if(strlen($National_ID) == 0)
+        {
+            echo "<script type='text/javascript'>window.location='../admin-login.php';alert('You did not enter your ID Number');</script>";
         }
-        if(strlen($password) < 8){
-            $login->response(false,"Password must be at least 8 characters long");
+        else if(strlen($admin_ID) == 0){
+            echo "<script type='text/javascript'>window.location='../admin-login.php';alert('You did not enter your admin ID');</script>";
         }
-        $login->validateLogin($data);
-   }
-   
+        else if(strpos($admin_ID, " ") > -1){
+            echo "<script type='text/javascript'>window.location='../admin-login.php';alert('Spaces are not allowed in admin ID');</script>";
+        } 
+        else if(strlen($password) == 0){
+            echo "<script type='text/javascript'>window.location='../admin-login.php';alert('You did not enter your password');</script>";
+        }
+        else if(strpos($password, " ") > -1){
+            echo "<script type='text/javascript'>window.location='../admin-login.php';alert('Spaces are not allowed in your password');</script>";
+        }
+        else {
+            include('config.php');
+            if(!$conn->connect_error){
+                $conn->select_db("u22492616_COS221");
+            }
+            // Check if the user exists in the database
+            $stmt = $conn->prepare('SELECT * FROM Admin_User WHERE AdminID = ?');
+            $stmt->bind_param('s', $admin_ID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows == 0) {
+                // If the user does not exist, notify the user
+                echo "<script>window.location='../admin-login.php';
+                                alert('User does not exist');
+                        </script>";
+            } else {
+                if($row = $result->fetch_array(MYSQLI_ASSOC)){
+                    $pass = $row["Password"];
+                    if($password == $pass)
+                    {
+                        echo "<script>alert('You successfully logged in');</script>";
+                        $_SESSION["AdminID"] = $admin_ID;
+                        echo "<meta http-equiv='refresh' content='0; url=../Wines.php'>";     
+                    }
+                    else
+                    {
+                        echo "<script>window.location='../admin-login.php';
+                                alert('Incorrect Password');
+                        </script>"; 
+                    }
+                }    
+                
+            }
+            $conn->close();
+        }
+    
+    }
+?>
