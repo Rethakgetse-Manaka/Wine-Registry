@@ -99,8 +99,20 @@
                 exit();
             }
         }
+        public function getRegions($data){
+            $stmt = $this->conn->prepare('SELECT RegionName,Climate,Country,Image FROM Region');
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Regions retrieved",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"Something went wrong");
+                exit();
+            }
+        }
         public function Review($data){
-            
+
 
         } 
         public function AdminLogin($data){
@@ -142,6 +154,9 @@
                     break;
                 case "getWinery":
                     $API->getWineries($data);
+                    break;
+                case "getRegions":
+                    $API->getRegions($data);
                     break;
                 default:
                     $API->response(false,"Invalid Action");
