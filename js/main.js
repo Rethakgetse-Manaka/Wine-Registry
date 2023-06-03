@@ -76,14 +76,14 @@ function PageLoad(){
     request.send(body);   
 }
 
-
+    
 const apiKey = getCookieValue('api_key');
 console.log(apiKey);
 
 function refine(){
     showloading();
     const carlist = document.querySelector('.car-wrapper');
-    let SortStyle = document.getElementById('filter-select-sort').value;
+    let SortStyle = document.getElementById('filter-select-filter').value;
     var order = "DESC";
     
 
