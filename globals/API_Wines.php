@@ -44,7 +44,7 @@
         //Get Wines function
         public function getWines($data) {
             //Searching of getWines
-            $sql = "SELECT Wine.Name, Grape_Varietal.VarietalName as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Wine.Image 
+            $sql = "SELECT Wine.WineID, Wine.Name, Grape_Varietal.VarietalName as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Wine.Image 
                     FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID 
                     INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID 
                     INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID 
@@ -52,7 +52,8 @@
             if((isset($data->search))){
                 $sql .= " Where Wine.Name LIKE '%" .$data->search->Name ."%'"; 
             }
-           
+            
+            
             if((isset($data->sort))){
                 $sql .= " Order by " .$data->sort ." ";
             }
@@ -85,8 +86,10 @@
         } 
         public function getWineries($data){
             //Searching of getWines
-            $sql = "";
-            
+            $sql = "SELECT Winery.Image,Region.RegionName, Region.Country, Winery.Winemaker, Winery.ProductionSize, Grape_Varietal.VarietalName 
+                    FROM Winery 
+                    INNER JOIN Region ON Winery.RegionID = Region.RegionID 
+                    INNER JOIN Grape_Varietal ON Winery.VarietalID = Grape_Varietal.VarietalID;";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -100,8 +103,8 @@
         }
         public function getRegions($data){
             $sql = "SELECT RegionName,Climate,Country,Image FROM Region Order by RegionName ";
-            if((isset($data->order))){
-                $sql .= $data->order ." ";
+            if(isset($data->order)){
+                $sql .= $data->order." ";
             }
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
@@ -115,7 +118,20 @@
             }
         }
         public function Review($data){
-
+            $sql = "SELECT User.Name, User.Surname, Reviews.Rating, Reviews.Comment 
+            FROM User 
+            INNER JOIN Reviews ON User.UserID = Reviews.userID WHERE Reviews.WineID = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('s', $data->WineID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Reviews retrieved",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"Something went wrong");
+                exit();
+            }
 
         } 
         public function AdminLogin($data){
