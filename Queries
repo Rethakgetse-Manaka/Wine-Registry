@@ -11,5 +11,20 @@ SELECT Wine.Name, Grape_Varietal.Name as "Grape_Varietal", Wine.Price, Wine.Bott
 GetWineries
 SELECT Region.RegionName, Region.Country, Winery.Winemaker, Winery.ProductionSize, Grape_Varietal.VarietalName FROM Winery INNER JOIN Region ON Winery.RegionID = Region.RegionID INNER JOIN Grape_Varietal ON Winery.VarietalID = Grape_Varietal.VarietalID;
 
+GetWines(RED)
+SELECT Wine.Name, Grape_Varietal.VarietalName as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Red_Wine.Tannin, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID INNER JOIN Red_Wine ON Wine.WineID = Red_Wine.WineID INNER JOIN Region ON Winery.RegionID = Region.RegionID
+
+GetWines(WHITE)
+SELECT Wine.Name, Grape_Varietal.VarietalName as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, White_Wine.Shade, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID INNER JOIN White_Wine ON Wine.WineID = White_Wine.WineID INNER JOIN Region ON Winery.RegionID = Region.RegionID
+
+GetWines(ROSE)
+SELECT Wine.Name, Grape_Varietal.VarietalName as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Rose_Wine.Percentage_Red, Rose_Wine.Percentage_White, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID INNER JOIN Rose_Wine ON Wine.WineID = Rose_Wine.WineID INNER JOIN Region ON Winery.RegionID = Region.RegionID
+
+GetWines(SPARKLING)
+SELECT Wine.Name, Grape_Varietal.VarietalName as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Sparkling_Wine.Carbon_Content, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID INNER JOIN Sparkling_Wine ON Wine.WineID = Sparkling_Wine.WineID INNER JOIN Region ON Winery.RegionID = Region.RegionID
+
+GetWines(DESSERT)
+SELECT Wine.Name, Grape_Varietal.VarietalName as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Dessert_Wine.Style, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID INNER JOIN Dessert_Wine ON Wine.WineID = Dessert_Wine.WineID INNER JOIN Region ON Winery.RegionID = Region.RegionID
+
 GetRatings
 SELECT User.Name, User.Surname, Reviews.Rating, Reviews.Comment FROM User INNER JOIN Reviews ON User.UserID = Reviews.userID WHERE Reviews.WineID = "W001"
