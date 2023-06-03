@@ -3,10 +3,8 @@
 window.addEventListener("load" , ()=>{
     const loading = document.querySelector(".loading");
     loading.classList.add("loading-hidden");
-    applyTheme();
+    // applyTheme();
     PageLoad();
-    populateCar_Type();
-    populateTrans_Type();
     if(document.cookie.indexOf('validated')){
         setTimeout(applyFilters,400);
     }
@@ -39,20 +37,18 @@ function PageLoad(){
     //1. Create the XMLHttpRequest Object
     let request = new XMLHttpRequest();
     var body = JSON.stringify({
-                "studentnum":"u22491032",
-                "type":"GetAllCars",
-                "limit":9,
-                "apikey":"a9198b68355f78830054c31a39916b7f",
-                "return":["model","make","year_to","transmission","max_speed_km_per_h","transmission","engine_type","drive_wheels","body_type","id_trim"]
+                "type":"getWines",
+                "return":"*"
         })
 
     //I am using asynchronous because we want the cars to show as soons as the age is loaded.
     //2. create request
-    var url = "https://wheatley.cs.up.ac.za/u22491032/COS216/PA4/globals/api.php";
+    var url = "../COS221/globals/api.php";
     request.open("POST",url,true);
     request.setRequestHeader("Content-type", "application/json");
     request.onreadystatechange = function(){
         if(request.readyState==4 && request.status == 200){
+            console.log(JSON.parse(request.responseText).data[0]);
             let Q1=JSON.parse(request.responseText);
             var cars = Q1.data;
             if(cars.length == 0){
@@ -61,22 +57,14 @@ function PageLoad(){
             }else{
                 for(let i=0; i<Q1.data.length; i++){
                     const html = `<div class="car">
-                        <img src="${Q1.data[i]['image']}" alt="${Q1.data[i]['model']}">
-                        <h2>${Q1.data[i]['model']}</h2>
-                        <li>Year: ${Q1.data[i]['year_to']}</li>
-                        <li>Brand: ${Q1.data[i]['make']}</li>
-                        <li>Transmission: ${Q1.data[i]['transmission']} </li>
-                        <li>Top Speed: ${Q1.data[i].max_speed_km_per_h}km/h</li>
-                        <li>Fuel Type: ${Q1.data[i]['engine_type']}</li>
-                        <li>Drivetrain: ${Q1.data[i]['drive_wheels']}</li>
-                        <li>Car_Type: ${Q1.data[i]['body_type']}</li>
-                        <div class='slideContainer' style="display: ${document.cookie.indexOf('validated') != -1 ? 'block' : 'none'};">
-                        <form action='ratings.php' method='POST'>
-                            <input type='hidden' id=car_id name='car_id' value='${Q1.data[i]['id_trim']}'>
-                            <input type='range' name='rating' min='1' max ='5'>
-                            <input type='submit' id= 'submit'>
-                        </form>
-                        </div>
+                        <img class="wineimage" src="${Q1.data[i]['Image']}" alt="${Q1.data[i]['Name']}">
+                        <h2>${Q1.data[i]['Name']}</h2>
+                        <h3>${Q1.data[i]['Grape_Varietal']}</h3>
+                        <li>Price: ${Q1.data[i]['Price']}</li>
+                        <li>Bottle Size: ${Q1.data[i]['Bottle_Size']} </li>
+                        <li>pH: ${Q1.data[i]['pH']}km/h</li>
+                        <li>Alcohol Content: ${Q1.data[i]['Alcohol_Content']}</li>
+                        <li>Region: ${Q1.data[i]['RegionName']}, ${Q1.data[i]['Country']}</li>
                     </div>`
                     carlist.insertAdjacentHTML('beforeend',html);
                } 
@@ -88,161 +76,38 @@ function PageLoad(){
     request.send(body);   
 }
 
-//This function populates the Car Type
-function populateCar_Type(){
-    
-    //1. Create the XMLHttpRequest Object
-    let request = new XMLHttpRequest();
-    var body = JSON.stringify({
-                "studentnum":"u22491032",
-                "type":"GetAllCarTypes",
-                "apikey":"a9198b68355f78830054c31a39916b7f",
-                "return":["body_type"]
-        })
 
-    //I am using asynchronous because we want the cars to show as soons as the age is loaded.
-    //2. create request
-    var url = "https://wheatley.cs.up.ac.za/u22491032/COS216/PA4/globals/api.php";
-    request.open("POST",url,true);
-    request.setRequestHeader("Content-type", "application/json");
-    request.onreadystatechange = function(){
-        if(request.readyState==4 && request.status == 200){
-            let Q1=JSON.parse(request.responseText);
-            var select = document.getElementById("filter-select-car-type");
-            const CarTypeSet = new Set();
-            Q1.data.forEach(obj => CarTypeSet.add(obj.body_type));
-            const uniqueBody_Types = [...CarTypeSet];
-            console.log(uniqueBody_Types);
-            for(let i=0;i<uniqueBody_Types.length;i++){
-                var opt = uniqueBody_Types[i];
-                var option = document.createElement("option");
-                option.textContent = opt;
-                option.value = opt;
-                select.appendChild(option);
-            }
-        }else{
-            console.log("Error:"+request.responseText.message);
-        }
-    }
-    request.send(body);   
-}
-function populateTrans_Type() {
-    // 1. Create the XMLHttpRequest Object
-    let request = new XMLHttpRequest();
-    var body = JSON.stringify({
-      "studentnum": "u22491032",
-      "type": "GetAllCarTypes",
-      "apikey": "a9198b68355f78830054c31a39916b7f",
-      "return": ["Transmission"]
-    });
-  
-    // 2. Create the request
-    var url = "https://wheatley.cs.up.ac.za/u22491032/COS216/PA4/globals/api.php";
-    request.open("POST", url, true);
-    request.setRequestHeader("Content-type", "application/json");
-    request.onreadystatechange = function () {
-      if (request.readyState == 4 && request.status == 200) {
-        let Q1 = JSON.parse(request.responseText);
-        var select = document.getElementById("filter-select-TT");
-        const transmissionSet = new Set();
-        Q1.data.forEach(obj => transmissionSet.add(obj.Transmission));
-        const uniqueTransmissions = [...transmissionSet];
-        console.log(uniqueTransmissions);
-        for (let i = 0; i < uniqueTransmissions.length; i++) {
-          var opt = uniqueTransmissions[i];
-          var option = document.createElement("option");
-          option.textContent = opt;
-          option.value = opt;
-          select.appendChild(option);
-        }
-      }
-    };
-    request.send(body);
-  }
-  
 const apiKey = getCookieValue('api_key');
 console.log(apiKey);
 
 function refine(){
     showloading();
     const carlist = document.querySelector('.car-wrapper');
-    let CarType = document.getElementById('filter-select-car-type').value;
-    let TransType = document.getElementById('filter-select-TT').value;
     let SortStyle = document.getElementById('filter-select-sort').value;
     var order = "DESC";
     
 
-    if(SortStyle == "Model"){
-        var sort = "model";
+    if(SortStyle == "Price(Highest - Lowest)"){
+        var sort = "Price";
+        var order = "DESC"
+    }else if(SortStyle == "Price(Lowest - Highest)"){
+        var sort = "Price";
         var order = "ASC"
-    }else if(SortStyle == "Brand"){
-        var sort = "make";
-        var order = "ASC"
-    }else if(SortStyle == "body_type"){
-        var sort = "body_type";
-        var order = "ASC"
+    }else if(SortStyle == "Alcohol Content(Highest - Lowest)"){
+        var sort = "Alcohol_Content";
+        var order = "DESC"
     }else{
-        var sort="max_speed_km_per_h";
+        var sort = "Alcohol_Content";
+        var order = "ASC"
     }
-    if(CarType == "" && TransType == ""){
-        var body = JSON.stringify({
-            "studentnum":"u22491032",
-            "type":"GetAllCars",
-            "apikey":"a9198b68355f78830054c31a39916b7f",
-            "sort":sort,
-            "order":order,
-            "limit":25,
-            "return":[
-                "model","make","year_to","transmission","max_speed_km_per_h","engine_type","drive_wheels",'body_type',"id_trim"
-            ]
-        });
-    }else if(CarType==""){
-        var body = JSON.stringify({
-            "studentnum":"u22491032",
-            "type":"GetAllCars",
-            "apikey":"a9198b68355f78830054c31a39916b7f",
-            "search":{
-                "transmission": TransType.toLowerCase()
-            },
-            "sort":sort,
-            "order":order,
-            "limit":25,
-            "return":[
-                "model","make","year_to","transmission","max_speed_km_per_h","engine_type","drive_wheels",'body_type',"id_trim"
-            ]
-        });
-    }else if(TransType==""){
-        var body = JSON.stringify({
-            "studentnum":"u22491032",
-            "type":"GetAllCars",
-            "apikey":"a9198b68355f78830054c31a39916b7f",
-            "search":{
-                "body_type": CarType.toLowerCase()
-            },
-            "sort":sort,
-            "order":order,
-            "limit":25,
-            "return":[
-                "model","make","year_to","transmission","max_speed_km_per_h","engine_type","drive_wheels",'body_type',"id_trim"
-            ]
-        });
-    }else{
-        var body = JSON.stringify({
-            "studentnum":"u22491032",
-            "type":"GetAllCars",
-            "apikey":"a9198b68355f78830054c31a39916b7f",
-            "search":{
-                "body_type": CarType.toLowerCase(),
-                "transmission":  TransType.toLowerCase()
-            },
-            "sort":sort,
-            "order":order,
-            "limit":25,
-            "return":[
-                "model","make","year_to","transmission","max_speed_km_per_h","engine_type","drive_wheels",'body_type',"id_trim"
-            ]
-        });
-    }
+    
+    var body = JSON.stringify({
+        "type":"getWines",
+        "sort":sort,
+        "order":order,
+        "return":"*"
+    });
+    
     carlist.innerHTML = '';
     //1. Create the XMLHttpRequest Object
     let request = new XMLHttpRequest();
@@ -250,7 +115,7 @@ function refine(){
     console.log(body);
     //I am using asynchronous because we want the cars to show as soon as the data is loaded.
     //2. create request
-    request.open("POST","https://wheatley.cs.up.ac.za/u22491032/COS216/PA4/globals/api.php",true);
+    request.open("POST","../COS221/globals/api.php",true);
     request.onreadystatechange = function(){
         if(request.readyState== 4 && request.status == 200){
             let Q1=JSON.parse(request.responseText);
@@ -262,22 +127,14 @@ function refine(){
             }else{
                 for(let i=0; i<Q1.data.length; i++){
                     const html = `<div class="car">
-                    <img src="${Q1.data[i]['image']}" alt="${Q1.data[i]['model']}">
-                    <h2>${Q1.data[i]['model']}</h2>
-                    <li>Year: ${Q1.data[i]['year_to']}</li>
-                    <li>Brand: ${Q1.data[i]['make']}</li>
-                    <li>Transmission: ${Q1.data[i]['transmission']} </li>
-                    <li>Top Speed: ${Q1.data[i].max_speed_km_per_h}km/h</li>
-                    <li>Fuel Type: ${Q1.data[i]['engine_type']}</li>
-                    <li>Drivetrain: ${Q1.data[i]['drive_wheels']}</li>
-                    <li>Car_Type: ${Q1.data[i]['body_type']}</li>
-                    <div class='slideContainer' style="display: ${document.cookie.indexOf('validated') != -1 ? 'block' : 'none'};">
-                        <form action='ratings.php' method='POST'>
-                            <input type='hidden' id=car_id name='car_id' value='${Q1.data[i]['id_trim']}'>
-                            <input type='range' name='rating' min='1' max ='5'>
-                            <input type='submit' id= 'submit'>
-                        </form>
-                    </div>
+                    <img class="wineimage" src="${Q1.data[i]['Image']}" alt="${Q1.data[i]['Name']}">
+                    <h2>${Q1.data[i]['Name']}</h2>
+                    <h3>${Q1.data[i]['Grape_Varietal']}</h3>
+                    <li>Price: ${Q1.data[i]['Price']}</li>
+                    <li>Bottle Size: ${Q1.data[i]['Bottle_Size']} </li>
+                    <li>pH: ${Q1.data[i]['pH']}km/h</li>
+                    <li>Alcohol Content: ${Q1.data[i]['Alcohol_Content']}</li>
+                    <li>Region: ${Q1.data[i]['RegionName']}, ${Q1.data[i]['Country']}</li>
                 </div>`
                 carlist.insertAdjacentHTML('beforeend',html); 
                } 
@@ -383,13 +240,3 @@ function toggleActive() {
   
   const links = document.querySelectorAll('.nav-link'); // get all the nav links
   links.forEach(link => link.addEventListener('click', toggleActive)); // add event listener to each link 
-
-
-
-
-
-
-
-
-
-
