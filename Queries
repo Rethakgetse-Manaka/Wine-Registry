@@ -31,3 +31,6 @@ SELECT Winery.WineryID FROM Winery WHERE Winery.WineryName = $WineryName;
 
 GetRatings
 SELECT User.Name, User.Surname, Reviews.Rating, Reviews.Comment FROM User INNER JOIN Reviews ON User.UserID = Reviews.userID WHERE Reviews.WineID = "W001"
+
+Check if Wine exists already
+SELECT * FROM Wine WHERE Wine.Name = $wineName
