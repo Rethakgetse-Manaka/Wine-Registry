@@ -233,6 +233,33 @@
                 exit();
             }
         } 
+        //Get winery ID
+        public function getWineryID($data){
+            $stmt = $this->conn->prepare('SELECT WineryID FROM Winery Where WineryName = ?');
+            $stmt->bind_param('s', $data->name);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Winery ID found",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"Winery ID not found");
+                exit();
+            }
+        }
+        public function getVarietalID($data){
+            $stmt = $this->conn->prepare('SELECT VarietalID FROM Grape_Varietal Where VarietalName = ?');
+            $stmt->bind_param('s', $data->name);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Varietal ID found",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"Varietal ID not found");
+                exit();
+            }
+        }
         public function getWineries($data){
             //Searching of getWines
             $sql = "SELECT Winery.WineryName,Winery.Image,Region.RegionName, Region.Country, Winery.Winemaker, Winery.ProductionSize, Grape_Varietal.VarietalName 
@@ -350,6 +377,12 @@
                     break;
                 case "getRegions":
                     $API->getRegions($data);
+                    break;
+                case "getWineryID":
+                    $API->getWineryID($data);
+                    break;
+                case "getVarietalID":
+                    $API->getVarietalID($data);
                     break;
                 default:
                     $API->response(false,"Invalid Action");
