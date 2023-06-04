@@ -48,7 +48,7 @@
                 if($row = $result->fetch_array(MYSQLI_ASSOC)){
                     
                     $pass = $row["Password"];
-                    if($password == $pass)
+                    if(password_verify($password,$pass))
                     {
                         echo "<script>alert('You successfully logged in');</script>";
                         $_SESSION["Email"] = $email;
