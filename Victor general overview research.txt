@@ -1,0 +1,14 @@
+The flow of the program for our wine tourism will be as follows:
+A seemless user flow is require in order to meet the needs of the end-user this will be achieved in our website by first having a landing page basically the home page which will need to allow the user to be able to access all the main page categories in the website. This will be achieved through the use of HTML as if updates need to be made to any HTML element Javascript DOM (Document Object Manipulation) will be used to further remove or add additional elements. Several HTML pages will need to be created for every distinct page on our wine tourism website such as a wines page, wineries page and a login page. The HTML will just provide the basic visual elements of the screen but CSS will be used to make the website visually aesthetic to the user to ensure that an interface is created that will be easy for the user to use while still allowing optimal functionality. The functionality behind all these pages will be undertaken by Javascript which will mostly be used in providing functionality to our website such as searching, sorting and various animations that the user may need to see on the website. The Javascript will also be used to make calls to our API based on certain functions we may have such as getWine(), getWinePrice(), getWinery(), once either of these functions are called a call will be made to our PHP API. The API is what will be used to contact our database which is basically the middle man between our client and the database it essentially allows the two to communicate with one another. In our database we plan on hosting it on a portable web application called phpMyAdmin this will allow all group members to be able to synchronously access the website and make changes as need through the use SQL which is a quering language used to access and manipulate databases as needed. 
+
+To tie all of this together and to ensure that the workflow between group members is seemless and to ensure that we can work on the same program and at the same time and provide updates to the program as milestones are reached we will use Github and Git in order to equally delegate work amongst group members 
+
+References:
+
+Mulesoft (2018). What is an API? (Application Programming Interface). [online] MuleSoft. Available at: https://www.mulesoft.com/resources/api/what-is-an-api.
+
+w3schools (2019). SQL Introduction. [online] W3schools.com. Available at: https://www.w3schools.com/sql/sql_intro.asp.
+
+Webflow. (n.d.). How to create a user flow for your website | Webflow Blog. [online] Available at: https://webflow.com/blog/user-flow-website.
+
+www.javatpoint.com. (n.d.). What is phpMyAdmin: Tutorial, Features, Installation - javatpoint. [online] Available at: https://www.javatpoint.com/phpmyadmin.
