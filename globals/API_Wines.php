@@ -86,7 +86,7 @@
         } 
         public function getWineries($data){
             //Searching of getWines
-            $sql = "SELECT Winery.Image,Region.RegionName, Region.Country, Winery.Winemaker, Winery.ProductionSize, Grape_Varietal.VarietalName 
+            $sql = "SELECT Winery.WineryName,Winery.Image,Region.RegionName, Region.Country, Winery.Winemaker, Winery.ProductionSize, Grape_Varietal.VarietalName 
                     FROM Winery 
                     INNER JOIN Region ON Winery.RegionID = Region.RegionID 
                     INNER JOIN Grape_Varietal ON Winery.VarietalID = Grape_Varietal.VarietalID;";
@@ -94,10 +94,10 @@
             $stmt->execute();
             $result = $stmt->get_result();
             if($result->num_rows>0){
-                $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
+                $this->response(true,"Wineries found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"No Wines found");
+                $this->response(true,"No Wineries found");
                 exit();
             }
         }
