@@ -26,5 +26,8 @@ SELECT Wine.Name, Grape_Varietal.VarietalName as "Grape_Varietal", Wine.Price, W
 GetWines(DESSERT)
 SELECT Wine.Name, Grape_Varietal.VarietalName as "Grape_Varietal", Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Dessert_Wine.Style, Wine.Image FROM Wine INNER JOIN Quality ON Wine.WineID = Quality.WineID INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID INNER JOIN Dessert_Wine ON Wine.WineID = Dessert_Wine.WineID INNER JOIN Region ON Winery.RegionID = Region.RegionID
 
+Get WineryID based on WineryName
+SELECT Winery.WineryID FROM Winery WHERE Winery.WineryName = $WineryName;
+
 GetRatings
 SELECT User.Name, User.Surname, Reviews.Rating, Reviews.Comment FROM User INNER JOIN Reviews ON User.UserID = Reviews.userID WHERE Reviews.WineID = "W001"
