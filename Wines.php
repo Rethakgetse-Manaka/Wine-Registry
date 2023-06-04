@@ -31,6 +31,12 @@
                </div>
             </div>
          <!--Filter Section-->
+             <div id="search filter" class="filter-box">
+             <input id="search-input" type="text" placeholder="Enter wine name" />
+            <button onclick="search()" type="button">Search</button>
+
+             </div>
+            
              <div class="filter-box">
                <select id="filter-select-filter"  class="filter-select">
                  <option value="" disabled selected>Sort</option>
@@ -96,7 +102,7 @@
         <div class="loading">
           <div class="loading-container"></div>
         </div> 
-        <script src ="js/Search_bar.js" ></script>
+        <!-- <script src ="js/Search_bar.js" ></script> -->
         <footer>
             <?php include("./globals/footer.php")?>
         </footer>
