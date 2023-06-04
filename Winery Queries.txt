@@ -1,0 +1,23 @@
+Winery Queries:
+
+
+- Add a new winery:
+INSERT INTO Winery (WineryName, Licensed, ProductionSize, Vinyard, Winemaker, VarietalID, RegionID)
+VALUES ($wineryName, $license, , $proSize, $winemaker, (SELECT VarietalID FROM Grape_Varietal WHERE VarietalName = user_varietal_text), (SELECT RegionlID
+FROM Region WHERE RegionName = user_region_text));
+
+- Update the winemaker:
+UPDATE Winery
+SET Winemaker = $winemaker
+WHERE WineryName = $wineryName;
+
+- Update the production size:
+UPDATE Winery
+SET ProductionSize = $proSize
+WHERE WineryName = $wineryName;
+
+- Filter the Wineries by grape varietal:
+SELECT *
+FROM Winery
+WHERE VarietalID = (SELECT VarietalID FROM Grape_Varietal WHERE VarietalName = user_varietal_text);
+
