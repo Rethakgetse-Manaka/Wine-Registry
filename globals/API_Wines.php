@@ -71,6 +71,155 @@
                 exit();
             }
         }
+        public function getRose($data){
+            $sql = "SELECT Wine.Name, Grape_Varietal.VarietalName as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Rose_Wine.Percentage_Red, Rose_Wine.Percentage_White, Wine.Image 
+                    FROM Wine 
+                    INNER JOIN Quality ON Wine.WineID = Quality.WineID 
+                    INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID 
+                    INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID 
+                    INNER JOIN Rose_Wine ON Wine.WineID = Rose_Wine.WineID 
+                    INNER JOIN Region ON Winery.RegionID = Region.RegionID ";
+            if((isset($data->search->Name))){
+                $sql .= " Where Wine.Name LIKE '%" .$data->search->Name ."%'"; 
+            }
+            
+            
+            if((isset($data->sort))){
+                $sql .= " Order by " .$data->sort ." ";
+            }
+            if((isset($data->order))){
+                $sql .= $data->order;
+            }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"No Wines found");
+                exit();
+            }
+        }
+        public function getRed($data){
+            $sql = "SELECT Wine.Name, Grape_Varietal.VarietalName as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Red_Wine.Tannin, Wine.Image 
+                    FROM Wine 
+                    INNER JOIN Quality ON Wine.WineID = Quality.WineID 
+                    INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID 
+                    INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID 
+                    INNER JOIN Red_Wine ON Wine.WineID = Red_Wine.WineID 
+                    INNER JOIN Region ON Winery.RegionID = Region.RegionID ";
+            if((isset($data->search->Name))){
+                $sql .= " Where Wine.Name LIKE '%" .$data->search->Name ."%'"; 
+            }
+            
+            
+            if((isset($data->sort))){
+                $sql .= " Order by " .$data->sort ." ";
+            }
+            if((isset($data->order))){
+                $sql .= $data->order;
+            }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"No Wines found");
+                exit();
+            }
+        }
+        public function getWhite($data){
+            $sql = "SELECT Wine.Name, Grape_Varietal.VarietalName as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, White_Wine.Shade, Wine.Image 
+                    FROM Wine 
+                    INNER JOIN Quality ON Wine.WineID = Quality.WineID 
+                    INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID 
+                    INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID 
+                    INNER JOIN White_Wine ON Wine.WineID = White_Wine.WineID INNER JOIN Region ON Winery.RegionID = Region.RegionID ";
+            if((isset($data->search->Name))){
+                $sql .= " Where Wine.Name LIKE '%" .$data->search->Name ."%'"; 
+            }
+            
+            
+            if((isset($data->sort))){
+                $sql .= " Order by " .$data->sort ." ";
+            }
+            if((isset($data->order))){
+                $sql .= $data->order;
+            }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"No Wines found");
+                exit();
+            }
+        }
+        public function getDessert($data){
+            $sql = "SELECT Wine.Name, Grape_Varietal.VarietalName as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Dessert_Wine.Style, Wine.Image 
+                    FROM Wine 
+                    INNER JOIN Quality ON Wine.WineID = Quality.WineID 
+                    INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID 
+                    INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID 
+                    INNER JOIN Dessert_Wine ON Wine.WineID = Dessert_Wine.WineID INNER JOIN Region ON Winery.RegionID = Region.RegionID ";
+            if((isset($data->search->Name))){
+                $sql .= " Where Wine.Name LIKE '%" .$data->search->Name ."%'"; 
+            }
+            
+            
+            if((isset($data->sort))){
+                $sql .= " Order by " .$data->sort ." ";
+            }
+            if((isset($data->order))){
+                $sql .= $data->order;
+            }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"No Wines found");
+                exit();
+            }
+        }
+        public function getSparkling($data){
+            $sql = "SELECT Wine.Name, Grape_Varietal.VarietalName as Grape_Varietal, Wine.Price, Wine.Bottle_Size, Quality.pH, Quality.Alcohol_Content, Region.RegionName, Region.Country, Sparkling_Wine.Carbon_Content, Wine.Image 
+                    FROM Wine 
+                    INNER JOIN Quality ON Wine.WineID = Quality.WineID 
+                    INNER JOIN Winery ON Wine.WIneryID = Winery.WineryID 
+                    INNER JOIN Grape_Varietal ON Wine.VarietalID = Grape_Varietal.VarietalID 
+                    INNER JOIN Sparkling_Wine ON Wine.WineID = Sparkling_Wine.WineID 
+                    INNER JOIN Region ON Winery.RegionID = Region.RegionID ";
+            if((isset($data->search->Name))){
+                $sql .= " Where Wine.Name LIKE '%" .$data->search->Name ."%'"; 
+            }
+            
+            
+            if((isset($data->sort))){
+                $sql .= " Order by " .$data->sort ." ";
+            }
+            if((isset($data->order))){
+                $sql .= $data->order;
+            }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"No Wines found");
+                exit();
+            }
+        }
+
         public function login($data){
             $stmt = $this->conn->prepare('SELECT * FROM User Where Email = ?');
             $stmt->bind_param('s', $data->username);
@@ -155,8 +304,33 @@
         if(isset($data->type) && isset($data->return)){
             switch($data->type){
                 case "getWines":
-                    $API->getWines($data);
-                    break;
+                    if(isset($data->search->filter)){
+                        switch(strtolower($data->search->filter)){
+                            case "red":
+                                $API->getRed($data);
+                                break;
+                            case "white":
+                                $API->getWhite($data);
+                                break;
+                            case "sparkling":
+                                $API->getSparkling($data);
+                                break;
+                            case "rose":
+                                $API->getRose($data);
+                                break;
+                            case "dessert":
+                                $API->getDessert($data);
+                                break;
+                            
+                            default:
+                                $API->response(false,"Invalid Action");
+                                break;
+                        }
+                    }else{
+                        $API->getWines($data);
+                        break;
+                    }
+                    
                 case "login":
                     if(!isset($data->username) || !isset($data->password)){
                         $API->response(false,"Please fill in all details");
