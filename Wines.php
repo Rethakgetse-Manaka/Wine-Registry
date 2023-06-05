@@ -69,6 +69,8 @@
                 <button id="insertWine" class="refine" onclick="showForm()">Insert Wine</button>
                 <br>
                 <button id="updateWine" class="refine" onclick="updateWine()">Update Wine</button>
+                 <br>
+                 <button id="deleteWine" class="refine" onclick="deleteWine()">Delete Wine</button>
                 <!-- <button id="Refine" class="refine" onclick="refine()">Update Wines</button> -->
              </div>
              
