@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php session_start() ?>
     <meta charset="UTF-8">
     <link rel="stylesheet" href = "css/homepage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" 
@@ -12,7 +13,6 @@
 </head>
 <body>
     <!-- NavBar -->
-    <?php include("globals/header.php")?>
     <div class="login-container">
         <form action="./globals/validate_login.php" class="login-form" method="POST">
             <div class = "heading">
@@ -32,13 +32,16 @@
             </div>      
         </form>
     </div>
+    <!-- <div class="loading">
+        <div class="loading-container"></div>
+    </div>  -->
     <footer>
             <?php include("./globals/footer.php")?>
     </footer>
 </body>
     <style>
         .login-container {
-            background-image: url("img/Login.jpg");
+            /* background-image: url("img/Login.jpg"); */
             background-repeat: no-repeat;
             background-size: cover;
             background-color: grey;
