@@ -844,6 +844,154 @@ function updateWine() {
   formContainer.appendChild(form);
 }
 
+function deleteWine() {
+  var formContainer = document.getElementById("formContainer");
+  formContainer.innerHTML = "";
+
+  var bContainer = document.getElementById("buttonContainer");
+  bContainer.innerHTML = "";
+
+  var form = document.createElement("form");
+  form.action = "#";
+  form.method = "POST";
+  form.style.border = "1px solid #ccc";
+
+  var container = document.createElement("div");
+  container.className = "container";
+
+  var heading = document.createElement("p");
+  heading.className = "heading";
+  heading.textContent = "Delete a Wine";
+  container.appendChild(heading);
+
+  var description = document.createElement("p");
+  description.textContent =
+    "Please fill in the form below to delete a new wine.";
+  container.appendChild(description);
+
+  var hr = document.createElement("hr");
+  container.appendChild(hr);
+
+  var wineLabel = document.createElement("label");
+  wineLabel.htmlFor = "dWine";
+  wineLabel.textContent = "Wine ID:";
+  container.appendChild(wineLabel);
+
+  var wineInput = document.createElement("input");
+  wineInput.type = "text";
+  wineInput.id = "dWine";
+  wineInput.name = "dWine";
+  container.appendChild(wineInput);
+
+  var wineTypeLabel = document.createElement("label");
+  wineTypeLabel.htmlFor = "dType";
+  wineTypeLabel.textContent = "Wine Type:";
+  container.appendChild(wineTypeLabel);
+
+  var wineTypeSelect = document.createElement("select");
+  wineTypeSelect.id = "dType";
+  wineTypeSelect.name = "dType";
+
+  var wineTypeOptions = [
+    "Dessert Wine",
+    "Red Wine",
+    "White Wine",
+    "Rose Wine",
+    "Sparkling Wine",
+  ];
+
+  for (var i = 0; i < wineTypeOptions.length; i++) {
+    var option = document.createElement("option");
+    option.value = wineTypeOptions[i];
+    option.textContent = wineTypeOptions[i];
+    wineTypeSelect.appendChild(option);
+  }
+
+  container.appendChild(wineTypeSelect);
+  container.appendChild(document.createElement("br"));
+  container.appendChild(document.createElement("br"));
+
+  var clearButton = document.createElement("button");
+  clearButton.type = "button";
+  clearButton.className = "cancelbtn";
+  clearButton.textContent = "Clear";
+  clearButton.addEventListener("click", function () {
+    document.getElementById("dWine").value = "";
+    document.getElementById("dType").value = "";
+  });
+
+  var addButton = document.createElement("button");
+  addButton.type = "submit";
+  addButton.id = "btnSignUp";
+  addButton.name = "submit";
+  addButton.className = "signupbtn";
+  addButton.textContent = "Delete Wine";
+  addButton.addEventListener("click", function () {
+    event.preventDefault();
+    var wine = document.getElementById("dWine").value;
+    var type = document.getElementById("dType").value;
+    
+    if (wine == "" && document.getElementById("dType").selectedIndex == 0) {
+      alert("Please fill in all the required fields.");
+    } else {
+      let req = new XMLHttpRequest();
+      var updateBody = JSON.stringify({
+        type: "deleteWine",
+        wineID: wine,
+        wineType: type
+      });
+      req.open("POST", "http://localhost/5-31/API_Wines.php", false);
+      req.onreadystatechange = function () {
+        if (req.readyState == 4 && req.status == 200) {
+          let Q1 = JSON.parse(req.responseText);
+          if (
+            Q1.message == "Invalid wine type" ||
+            Q1.message == "Missing Wine Type" ||
+            Q1.message == "Something went wrong in deleting wines" ||
+            Q1.message == "Missing Parameters"
+          ) {
+            alert("There is an error when deleting a wine or a the wine was already deleted.");
+          } else if (Q1.message == "Wine deleted") {
+            alert("The delete was successful.");
+            var mainDiv = document.getElementById("formContainer");
+            var subDiv = document.getElementById("buttonContainer");
+            mainDiv.innerHTML = "";
+            subDiv.innerHTML = "";
+            PageLoad();
+          }
+        } else {
+          console.log("Error");
+        }
+      };
+      req.send(updateBody);
+    }
+  });
+  var goBackButton = document.createElement("button");
+  goBackButton.type = "button";
+  goBackButton.className = "backBtn";
+  goBackButton.textContent = "Go Back";
+  goBackButton.addEventListener("click", function () {
+    var mainDiv = document.getElementById("formContainer");
+    var subDiv = document.getElementById("buttonContainer");
+    mainDiv.innerHTML = "";
+    subDiv.innerHTML = "";
+  });
+
+  var clearfix = document.createElement("div");
+  clearfix.className = "clearfix";
+
+  clearfix.appendChild(clearButton);
+  clearfix.appendChild(addButton);
+  clearfix.appendChild(goBackButton);
+
+  var buttonContainer = document.getElementById("buttonContainer");
+  buttonContainer.appendChild(clearfix);
+
+  form.appendChild(container);
+
+  formContainer.appendChild(form);
+}
+
 function toggleActive() {
     const links = document.querySelectorAll('.nav-link'); // get all the nav links
     links.forEach(link => link.classList.remove('active')); // remove active class from all links
