@@ -65,9 +65,19 @@ function PageLoad(){
                         <li>pH: ${Q1.data[i]['pH']}</li>
                         <li>Alcohol Content: ${Q1.data[i]['Alcohol_Content']}%</li>
                         <li>Region: ${Q1.data[i]['RegionName']}, ${Q1.data[i]['Country']}</li>
+                        <button class="review-button" data-wine="${encodeURIComponent(JSON.stringify(Q1.data[i]))}">Check Review</button>
                     </div>`
                     carlist.insertAdjacentHTML('beforeend',html);
                } 
+                // Add event listener to each "Check Review" button
+                const reviewButtons = document.querySelectorAll('.review-button');
+                reviewButtons.forEach((button) => {
+                button.addEventListener('click', (event) => {
+                    const wineData = JSON.parse(decodeURIComponent(event.target.dataset.wine));
+                    const reviewURL = 'reviews.php?wine=' + encodeURIComponent(JSON.stringify(wineData));
+                    window.location.href = reviewURL;
+                });
+                });
             }
         }else{
             console.log("Error:"+request.responseText.message);
