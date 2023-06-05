@@ -500,7 +500,7 @@
     if($_SERVER['REQUEST_METHOD']==='POST'){
         $API = API_Wines::getInstance();
         $data = json_decode(file_get_contents('php://input'));
-        if(isset($data->type) && isset($data->return)){
+        if(isset($data->type)){
             switch($data->type){
                 case "getWines":
                     if(isset($data->search->filter)){
@@ -562,7 +562,7 @@
                     $API->addReviews($data);
                     break;
                 case "insertWine":
-                    if(isset($data['wName'],$data['wPrice'],$data['wbottleSize'],$data['wImage'],$data['wWineryID'],$data['wVarietalID'],$data['WineType'],$data['WineTypeValue'])){
+                    if(isset($data->wName,$data->wPrice,$data->wbottleSize,$data->wImage,$data->wWineryID,$data->wVarietalID,$data->WineType,$data->WineTypeValue)){
                         $API->insertWines($data);
                     }else{
                         $API->response(false,"Missing Parameters");
