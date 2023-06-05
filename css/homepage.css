@@ -337,6 +337,93 @@ font-weight: bold;
     opacity: 0;
     visibility: hidden;
 }
+/* css for insert form  */
+label {
+  margin-top: 20px;
+  font-family: "Body-Font";
+  font-weight: 500;
+  font-stretch: normal;
+  font-size: 17px;
+  color: white;
+}
+
+.heading {
+  text-align: center;
+  font-size: 30px;
+  font-family: "Body-Font";
+  font-weight: 700;
+  font-stretch: normal;
+  color: white;
+}
+.container {
+  padding: 50px;
+}
+
+button:hover {
+  opacity: 1;
+}
+
+.cancelbtn {
+  padding: 10px 14px;
+  background-color: #eb2222;
+}
+
+.signupbtn {
+    padding: 10px 14px;
+    background-color:#04AA6D;
+  }
+.backBtn {
+  width: 30%;
+  margin: auto;
+
+  padding: 6px;
+  font-size: 17px;
+  background: #facf39;
+}
+.backBtn :hover {
+  opacity: 1;
+}
+
+.cancelbtn,
+.signupbtn {
+  float: left;
+  width: 50%;
+}
+@media screen and (max-width: 300px) {
+  .cancelbtn,
+  .signupbtn {
+    width: 100%;
+  }
+}
+input[type="text"],
+input[type="password"], input[type="number"], select {
+  width: 100%;
+  padding: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+  border: none;
+  background: #ddd;
+  /*border: 2px solid red;*/
+  border-radius: 4px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  background-color: #908181;
+  outline: none;
+}
+.demo {
+  font-size: 17px;
+  font-family: "Body-Font";
+  font-stretch: normal;
+}
+hr {
+  border: 1px solid #550a0a;
+  margin-bottom: 25px;
+}
+
+/*  end of new css*/
 .loading-container{
     width: 80px;
     height: 80px;
