@@ -260,6 +260,9 @@
                 exit();
             }
         }
+        public function getWineID($value){
+
+        }
         public function getWineries($data){
             //Searching of getWines
             $sql = "SELECT Winery.WineryName,Winery.Image,Region.RegionName, Region.Country, Winery.Winemaker, Winery.ProductionSize, Grape_Varietal.VarietalName 
@@ -396,9 +399,45 @@
                 exit();
             }
         }
-        // public function deleteWines($data){
-        //     $sql = 
-        // }
+        public function deleteWines($data){
+            $sql = "DELETE t1, t2, t3 
+                    FROM Wine t1 JOIN Quality t2 ON t1.WineID = t2.WineID JOIN ";
+            if(isset($data->wineType)){
+                switch(strtolower($data->wineType)){
+                    case "red wine":
+                        $sql .= "Red_Wine t3 ON t1.WineID = t3.WineID WHERE t1.WineID = ?";
+                        break;
+                    case "white wine":
+                        $sql .= "White_Wine t3 ON t1.WineID = t3.WineID WHERE t1.WineID = ?";
+                        break;
+                    case "rose wine":
+                        $sql .= "Rose_Wine t3 ON t1.WineID = t3.WineID WHERE t1.WineID = ?";
+                        break;
+                    case "sparkling wine":
+                        $sql .= "Sparkling_Wine t3 ON t1.WineID = t3.WineID WHERE t1.WineID = ?";
+                        break;
+                    case "dessert wine":
+                        $sql .= "Dessert_Wine t3 ON t1.WineID = t3.WineID WHERE t1.WineID = ?";
+                        break;
+                    default:
+                        $this->response(false,"Invalid wine type");
+                        break;
+                }
+            }else{
+                $this->response(false,"Missing Wine type");
+            }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('s', $data->wineID);
+            $stmt->execute();
+            $affectedRows = $stmt->affected_rows;
+            if ($affectedRows > 0) {
+                $this->response(true,"Wine deleted");
+                exit();
+            }else{
+                $this->response(false,"Something went wrong in deleting wines");
+                exit();
+            }
+        }
         public function insertWines($data){
             if($this->checkWineExists($data->wName)){
                 $this->response(false,"Wine already exists");
@@ -573,6 +612,14 @@
                     //Add validation
                     if(isset($data->wineID,$data->price,$data->image)){
                         $API->updateWines($data);
+                    }else{
+                        $API->response(false,"Missing Parameters");
+                    }
+                    break;
+                case "deleteWine":
+                    //Add validation
+                    if(isset($data->wineID)){
+                        $API->deleteWines($data);
                     }else{
                         $API->response(false,"Missing Parameters");
                     }
