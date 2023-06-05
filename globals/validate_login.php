@@ -1,5 +1,5 @@
 <?php 
-    
+    session_start();
     // Checking if information has been posted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Retrieve the form data
