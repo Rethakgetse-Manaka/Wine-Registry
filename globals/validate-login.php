@@ -1,5 +1,5 @@
 <?php 
-    
+    session_start();
     // Checking if information has been posted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Retrieve the form data
@@ -49,14 +49,8 @@
                  $hash = hash('sha256',$password_1);
                 if($hash == $pass)
                 {
-                    echo "<script type='text/javascript'>localStorage.setItem('Email','$email');</script>";
-                    echo "<script type='text/javascript'>localStorage.setItem('Authorised',false);</script>";
-                    echo "<script type='text/javascript'>localStorage.setItem('login',true);</script>";
                     echo "<script>alert('You successfully logged in');</script>";
                     $_SESSION["Email"] = $email;
-                   
-                    $_SESSION["loggedIn"] = true;
-                    
                     echo "<meta http-equiv='refresh' content='0; url=../Wines.php'>"; 
                     
                 }
