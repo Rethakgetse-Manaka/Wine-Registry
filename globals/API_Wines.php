@@ -373,6 +373,18 @@
                 return false;
             }
         }
+        private function checkWineID($value){
+            $sql = "SELECT * FROM Wine WHERE Wine.WineID = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('s', $value);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                return true;
+            }else{
+                return false;
+            }
+        }
         public function updateWines($data){
             if($data->price == "" && $data->image == ""){
                 $this->response(false,"Missing values");
@@ -425,6 +437,10 @@
                 }
             }else{
                 $this->response(false,"Missing Wine type");
+            }
+            if(!$this->checkWineID($data->wineID)){
+                $this->response(false,"Invalid wine type");
+                exit;
             }
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('s', $data->wineID);
