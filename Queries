@@ -34,3 +34,6 @@ SELECT User.Name, User.Surname, Reviews.Rating, Reviews.Comment FROM User INNER 
 
 Check if Wine exists already
 SELECT * FROM Wine WHERE Wine.Name = $wineName
+
+Update Wines
+UPDATE Wine SET Price = ?, Image = ? WHERE WineID = ?
