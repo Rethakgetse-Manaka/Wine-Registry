@@ -37,3 +37,6 @@ SELECT * FROM Wine WHERE Wine.Name = $wineName
 
 Update Wines
 UPDATE Wine SET Price = ?, Image = ? WHERE WineID = ?
+
+Delete Wines
+DELETE t1, t2, t3 FROM Wine t1 JOIN Quality t2 ON t1.WineID = t2.WineID JOIN Red_Wine t3 ON t1.WineID = t3.WineID WHERE t1.WineID = "W015"
