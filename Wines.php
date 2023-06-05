@@ -64,9 +64,18 @@
              </div>
              <div>
                 <button id="Refine" class="refine" onclick="refine()">Refine</button><br>
+                <button id="insertWine" class="refine" onclick="showForm()">Insert Wine</button>
+                <br>
+                <button id="updateWine" class="refine" onclick="updateWine()">Update Wine</button>
                 <!-- <button id="Refine" class="refine" onclick="refine()">Update Wines</button> -->
              </div>
              
+            <div id="formContainer" class="mainContainer">
+             
+             </div>
+             <div id="buttonContainer" class="subContainer">
+
+             </div>
         </div>
         <!--Cars Section-->
         <div id="car-section"><!--Parent-->
