@@ -417,10 +417,7 @@
                         $stmt->bind_param('si', $wineID,$data->WineTypeValue->Tannin);
                         $stmt->execute();
                         $affectedRows = $stmt->affected_rows;
-                        if ($affectedRows > 0) {
-                            $this->response(true,"Wine added");
-                            exit();
-                        }else{
+                        if($affectedRows < 0){
                             $this->response(false,"Something went wrong");
                             exit();
                         }
@@ -432,10 +429,7 @@
                         $stmt->bind_param('ss', $wineID,$data->WineTypeValue->Shade);
                         $stmt->execute();
                         $affectedRows = $stmt->affected_rows;
-                        if ($affectedRows > 0) {
-                            $this->response(true,"Wine added");
-                            exit();
-                        }else{
+                        if($affectedRows < 0){
                             $this->response(false,"Something went wrong");
                             exit();
                         }
@@ -447,10 +441,7 @@
                         $stmt->bind_param('si', $wineID,$data->WineTypeValue->CarbonContent);
                         $stmt->execute();
                         $affectedRows = $stmt->affected_rows;
-                        if ($affectedRows > 0) {
-                            $this->response(true,"Wine added");
-                            exit();
-                        }else{
+                        if($affectedRows < 0){
                             $this->response(false,"Something went wrong");
                             exit();
                         }
@@ -462,10 +453,7 @@
                         $stmt->bind_param('sii', $wineID,$data->WineTypeValue->Percentage_Red,$data->WineTypeValue->Percentage_White);
                         $stmt->execute();
                         $affectedRows = $stmt->affected_rows;
-                        if ($affectedRows > 0) {
-                            $this->response(true,"Wine added");
-                            exit();
-                        }else{
+                        if($affectedRows < 0){
                             $this->response(false,"Something went wrong");
                             exit();
                         }
@@ -477,10 +465,7 @@
                         $stmt->bind_param('ss', $wineID,$data->WineTypeValue->Style);
                         $stmt->execute();
                         $affectedRows = $stmt->affected_rows;
-                        if ($affectedRows > 0) {
-                            $this->response(true,"Wine added");
-                            exit();
-                        }else{
+                        if($affectedRows < 0){
                             $this->response(false,"Something went wrong");
                             exit();
                         }
@@ -490,6 +475,19 @@
                         $this->response(false,"Invalid Wine Type entry");
                         exit();
                         break;
+                }
+                $sql_2 ="INSERT INTO Quality(WineID,Alcohol_Content,Density,Residual_Sugar,Fixed_Acidity,pH)
+                         VALUES (?,?,?,?,?,?)";
+                $stmt_2 = $this->conn->prepare($sql_2);
+                $stmt_2->bind_param('sddddd', $wineID,$data->wAlcoholContent,$data->wDensity,$data->wResidualSugar,$data->wFixedAcidity,$data->wpH);
+                $stmt_2->execute();
+                $affectedRows = $stmt_2->affected_rows;
+                if ($affectedRows > 0) {
+                    $this->response(true,"Wine added");
+                    exit();
+                }else{
+                    $this->response(false,"Something went wrong");
+                    exit();
                 }
             } else {
                 $this->response(false, "Something went wrong");
