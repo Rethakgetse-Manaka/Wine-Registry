@@ -45,11 +45,12 @@
                 // Display the API key to the user
                 $userPrefix = 'UR';
                 $userID =  uniqid($userPrefix);
-                $hash = password_hash($password_1, PASSWORD_BCRYPT);
+                $hash = hash('sha256',$password_1);
                 $statement = $conn->prepare("INSERT INTO User(UserID, Name, Surname, Email, Age, National_ID, Password) VALUES(?,?,?,?,?,?,?)");
                 $statement->bind_param("ssssiss", $userID, $name, $Surname, $email, $age, $nID, $hash);
                 $statement->execute();
                 $statement->close();
+
                 // Notify the user that the registration was successful
                 echo "<script>alert('Registration successful, please go login.')</script>";
                 header("Location: login.php");
