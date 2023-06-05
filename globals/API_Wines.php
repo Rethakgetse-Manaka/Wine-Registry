@@ -410,7 +410,7 @@
             $affectedRows = $stmt->affected_rows;
             if ($affectedRows > 0) {
                 switch(strtolower($data->WineType)){
-                    case "red":
+                    case "red wine":
                         $sql = "INSERT INTO Red_Wine(WineID,Tannin)
                                 VALUES (?,?)";
                         $stmt = $this->conn->prepare($sql);
@@ -425,7 +425,7 @@
                             exit();
                         }
                         break;
-                    case "white":
+                    case "white wine":
                         $sql = "INSERT INTO White_Wine(WineID,Shade)
                                 VALUES (?,?)";
                         $stmt = $this->conn->prepare($sql);
@@ -440,7 +440,7 @@
                             exit();
                         }
                         break;
-                    case "sparkling":
+                    case "sparkling wine":
                         $sql = "INSERT INTO Sparkling_Wine(WineID,Carbon_Content)
                                 VALUES (?,?)";
                         $stmt = $this->conn->prepare($sql);
@@ -455,7 +455,7 @@
                             exit();
                         }
                         break;
-                    case "rose":
+                    case "rose wine":
                         $sql = "INSERT INTO Rose_Wine(WineID,Percentage_Red,Percentage_White)
                                 VALUES (?,?)";
                         $stmt = $this->conn->prepare($sql);
@@ -470,7 +470,7 @@
                             exit();
                         }
                         break;
-                    case "dessert":
+                    case "dessert wine":
                         $sql = "INSERT INTO Dessert_Wine(WineID,Style)
                                 VALUES (?,?)";
                         $stmt = $this->conn->prepare($sql);
