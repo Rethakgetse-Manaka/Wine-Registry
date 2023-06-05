@@ -373,15 +373,15 @@
         public function updateWines($data){
             if($data->price == "" && $data->image == ""){
                 $this->response(false,"Missing values");
-            }else if($data->Image != "" && $data->price != ""){
+            }else if($data->image != "" && $data->price != ""){
                 $sql = "UPDATE Wine SET Price = ?, Image = ? WHERE WineID = ?";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bind_param('dss', $data->price,$data->image,$data->wineID);
-            }else if($data->Image != "" && $data->price == ""){
+            }else if($data->image != "" && $data->price == ""){
                 $sql = "UPDATE Wine SET Image = ? WHERE WineID = ?";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bind_param('ss', $data->image,$data->wineID);
-            }else if($data->Image == "" && $data->price != ""){
+            }else if($data->image == "" && $data->price != ""){
                 $sql = "UPDATE Wine SET Price = ? WHERE WineID = ?";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bind_param('ds', $data->price,$data->wineID);
@@ -396,6 +396,9 @@
                 exit();
             }
         }
+        // public function deleteWines($data){
+        //     $sql = 
+        // }
         public function insertWines($data){
             if($this->checkWineExists($data->wName)){
                 $this->response(false,"Wine already exists");
@@ -568,7 +571,7 @@
                     break;
                 case "updateWine":
                     //Add validation
-                    if(isset($data['wineID'],$data['price'],$data['image'])){
+                    if(isset($data->wineID,$data->price,$data->image)){
                         $API->updateWines($data);
                     }else{
                         $API->response(false,"Missing Parameters");
