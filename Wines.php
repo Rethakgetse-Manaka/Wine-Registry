@@ -63,16 +63,22 @@
                });
                </script> -->
              </div>
-             <div>
-                <button class="refine" onclick="PageLoad()">Reset Filters</button><br>
-                <button id="Refine" class="refine" onclick="refine()">Refine</button><br>
+               <div>
+                  <button class="refine" onclick="PageLoad()">Reset Filters</button><br>
+               </div>
+
+         
+             <?php if(isset($_SESSION['Authorised']) && $_SESSION['Authorised'] == true) :?>
+               <div>
+                
                 <button id="insertWine" class="refine" onclick="showForm()">Insert Wine</button>
                 <br>
                 <button id="updateWine" class="refine" onclick="updateWine()">Update Wine</button>
-                 <br>
-                 <button id="deleteWine" class="refine" onclick="deleteWine()">Delete Wine</button>
-                <!-- <button id="Refine" class="refine" onclick="refine()">Update Wines</button> -->
+                <br>
+                <button id="deleteWine" class="refine" onclick="deleteWine()">Delete Wine</button>
              </div>
+            <?php endif; ?>
+             
              
             <div id="formContainer" class="mainContainer">
              
