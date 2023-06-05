@@ -67,7 +67,7 @@
                 $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"No Wines found");
+                $this->response(true,"No Wines found");
                 exit();
             }
         }
@@ -97,7 +97,7 @@
                 $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"No Wines found");
+                $this->response(true,"No Wines found");
                 exit();
             }
         }
@@ -127,7 +127,7 @@
                 $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"No Wines found");
+                $this->response(true,"No Wines found");
                 exit();
             }
         }
@@ -156,7 +156,7 @@
                 $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"No Wines found");
+                $this->response(true,"No Wines found");
                 exit();
             }
         }
@@ -185,7 +185,7 @@
                 $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"No Wines found");
+                $this->response(true,"No Wines found");
                 exit();
             }
         }
@@ -215,7 +215,7 @@
                 $this->response(true,"Wines found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"No Wines found");
+                $this->response(true,"No Wines found");
                 exit();
             }
         }
@@ -229,7 +229,7 @@
                 $this->response(true,"User logged In");
                 exit();
             }else{
-                $this->response(false,"User not found");
+                $this->response(true,"User not found");
                 exit();
             }
         } 
@@ -243,7 +243,7 @@
                 $this->response(true,"Winery ID found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"Winery ID not found");
+                $this->response(true,"Winery ID not found");
                 exit();
             }
         }
@@ -256,7 +256,7 @@
                 $this->response(true,"Varietal ID found",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"Varietal ID not found");
+                $this->response(true,"Varietal ID not found");
                 exit();
             }
         }
@@ -289,7 +289,7 @@
                 $this->response(true,"Regions retrieved",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"Something went wrong");
+                $this->response(true,"Something went wrong");
                 exit();
             }
         }
@@ -305,11 +305,25 @@
                 $this->response(true,"Reviews retrieved",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(false,"Something went wrong");
+                $this->response(true,"Something went wrong");
                 exit();
             }
 
-        } 
+        }
+        public function addReviews($data){
+            $sql = "INSERT INTO Reviews (WineID,UserID,Rating,Comment) VALUES (?,?,?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('ssss', $data->WineID,$data->UserID,$data->Rating,$data->Comment);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                $this->response(true,"Review added",$result->fetch_all(MYSQLI_ASSOC));
+                exit();
+            }else{
+                $this->response(false,"Something went wrong");
+                exit();
+            }
+        }
         public function AdminLogin($data){
             $stmt = $this->conn->prepare('SELECT * FROM Admin_User Where AdminID = ? AND Password = ? AND Email = ?');
             $stmt->bind_param('sss', $data->adminID,$data->password,$data->username);
@@ -323,7 +337,165 @@
                 exit();
             }
 
-        }     
+        } 
+        public function generateWineID() {
+            $prefix = 'W';
+            $id = 1;
+            $existingIDs = [];
+            $stmt = $this->conn->prepare('SELECT WineID FROM Wine');
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $existingIDs[] = $row['WineID'];
+                }
+            }
+            // Find the next available ID
+            while (in_array($prefix . str_pad($id, 3, '0', STR_PAD_LEFT), $existingIDs)) {
+                $id++;
+            }
+            // Generate the unique WineID
+            $wineID = $prefix . str_pad($id, 3, '0', STR_PAD_LEFT);
+            return $wineID;
+        }
+        private function checkWineExists($value){
+            $sql = "SELECT * FROM Wine WHERE Wine.Name = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('s', $value);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        public function updateWines($data){
+            if($data->price == "" && $data->image == ""){
+                $this->response(false,"Missing values");
+            }else if($data->Image != "" && $data->price != ""){
+                $sql = "UPDATE Wine SET Price = ?, Image = ? WHERE WineID = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param('dss', $data->price,$data->image,$data->wineID);
+            }else if($data->Image != "" && $data->price == ""){
+                $sql = "UPDATE Wine SET Image = ? WHERE WineID = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param('ss', $data->image,$data->wineID);
+            }else if($data->Image == "" && $data->price != ""){
+                $sql = "UPDATE Wine SET Price = ? WHERE WineID = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param('ds', $data->price,$data->wineID);
+            }
+            $stmt->execute();
+            $affectedRows = $stmt->affected_rows;
+            if ($affectedRows > 0) {
+                $this->response(true,"Wine updated");
+                exit();
+            }else{
+                $this->response(false,"Something went wrong");
+                exit();
+            }
+        }
+        public function insertWines($data){
+            if($this->checkWineExists($data->wName)){
+                $this->response(false,"Wine already exists");
+                exit();
+            }
+            $wineID = $this->generateWineID();
+            $sql = "INSERT INTO Wine(WineID,WIneryID,Name,Price,Bottle_Size,VarietalID,Image)
+                    VALUES (?,?,?,?,?,?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('sssdiss', $wineID,$data->wWineryID,$data->wName,$data->wPrice,$data->wbottleSize,$data->wVarietalID,$data->wImage);
+            $stmt->execute();
+            $affectedRows = $stmt->affected_rows;
+            if ($affectedRows > 0) {
+                switch(strtolower($data->WineType)){
+                    case "red":
+                        $sql = "INSERT INTO Red_Wine(WineID,Tannin)
+                                VALUES (?,?)";
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->bind_param('si', $wineID,$data->WineTypeValue->Tannin);
+                        $stmt->execute();
+                        $affectedRows = $stmt->affected_rows;
+                        if ($affectedRows > 0) {
+                            $this->response(true,"Wine added");
+                            exit();
+                        }else{
+                            $this->response(false,"Something went wrong");
+                            exit();
+                        }
+                        break;
+                    case "white":
+                        $sql = "INSERT INTO White_Wine(WineID,Shade)
+                                VALUES (?,?)";
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->bind_param('ss', $wineID,$data->WineTypeValue->Shade);
+                        $stmt->execute();
+                        $affectedRows = $stmt->affected_rows;
+                        if ($affectedRows > 0) {
+                            $this->response(true,"Wine added");
+                            exit();
+                        }else{
+                            $this->response(false,"Something went wrong");
+                            exit();
+                        }
+                        break;
+                    case "sparkling":
+                        $sql = "INSERT INTO Sparkling_Wine(WineID,Carbon_Content)
+                                VALUES (?,?)";
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->bind_param('si', $wineID,$data->WineTypeValue->CarbonContent);
+                        $stmt->execute();
+                        $affectedRows = $stmt->affected_rows;
+                        if ($affectedRows > 0) {
+                            $this->response(true,"Wine added");
+                            exit();
+                        }else{
+                            $this->response(false,"Something went wrong");
+                            exit();
+                        }
+                        break;
+                    case "rose":
+                        $sql = "INSERT INTO Rose_Wine(WineID,Percentage_Red,Percentage_White)
+                                VALUES (?,?)";
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->bind_param('sii', $wineID,$data->WineTypeValue->Percentage_Red,$data->WineTypeValue->Percentage_White);
+                        $stmt->execute();
+                        $affectedRows = $stmt->affected_rows;
+                        if ($affectedRows > 0) {
+                            $this->response(true,"Wine added");
+                            exit();
+                        }else{
+                            $this->response(false,"Something went wrong");
+                            exit();
+                        }
+                        break;
+                    case "dessert":
+                        $sql = "INSERT INTO Dessert_Wine(WineID,Style)
+                                VALUES (?,?)";
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->bind_param('ss', $wineID,$data->WineTypeValue->Style);
+                        $stmt->execute();
+                        $affectedRows = $stmt->affected_rows;
+                        if ($affectedRows > 0) {
+                            $this->response(true,"Wine added");
+                            exit();
+                        }else{
+                            $this->response(false,"Something went wrong");
+                            exit();
+                        }
+                        break;
+                    
+                    default:
+                        $this->response(false,"Invalid Wine Type entry");
+                        exit();
+                        break;
+                }
+            } else {
+                $this->response(false, "Something went wrong");
+                exit();
+            }
+        }    
     }
     if($_SERVER['REQUEST_METHOD']==='POST'){
         $API = API_Wines::getInstance();
@@ -333,6 +505,7 @@
                 case "getWines":
                     if(isset($data->search->filter)){
                         switch(strtolower($data->search->filter)){
+                            //add fortified wine
                             case "red":
                                 $API->getRed($data);
                                 break;
@@ -383,6 +556,25 @@
                     break;
                 case "getVarietalID":
                     $API->getVarietalID($data);
+                    break;
+                case "insertReview":
+                    //Add validation
+                    $API->addReviews($data);
+                    break;
+                case "insertWine":
+                    if(isset($data['wName'],$data['wPrice'],$data['wbottleSize'],$data['wImage'],$data['wWineryID'],$data['wVarietalID'],$data['WineType'],$data['WineTypeValue'])){
+                        $API->insertWines($data);
+                    }else{
+                        $API->response(false,"Missing Parameters");
+                    }
+                    break;
+                case "updateWine":
+                    //Add validation
+                    if(isset($data['wineID'],$data['price'],$data['image'])){
+                        $API->updateWines($data);
+                    }else{
+                        $API->response(false,"Missing Parameters");
+                    }
                     break;
                 default:
                     $API->response(false,"Invalid Action");
