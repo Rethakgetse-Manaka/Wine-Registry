@@ -3,16 +3,11 @@
     // Checking if information has been posted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Retrieve the form data
-        $National_ID = $_POST["National_ID"];
         $admin_ID = $_POST['Admin_ID'];
         $password_1 = $_POST['Password'];
 
         $validInput = false;
-        if(strlen($National_ID) == 0)
-        {
-            echo "<script type='text/javascript'>window.location='../admin-login.php';alert('You did not enter your ID Number');</script>";
-        }
-        else if(strlen($admin_ID) == 0){
+        if(strlen($admin_ID) == 0){
             echo "<script type='text/javascript'>window.location='../admin-login.php';alert('You did not enter your admin ID');</script>";
         }
         else if(strpos($admin_ID, " ") > -1){
@@ -46,8 +41,13 @@
                  $hash = hash('sha256',$password_1);
                 if($hash == $pass)
                 {
+                    echo "<script type='text/javascript'>localStorage.setItem('AdminID','$admin_ID');</script>";
+                    echo "<script type='text/javascript'>localStorage.setItem('Authorised',true);</script>";
+                    echo "<script type='text/javascript'>localStorage.setItem('LoggedIn',true);</script>";
                     echo "<script>alert('You successfully logged in');</script>";
                     $_SESSION["AdminID"] = $admin_ID;
+                    $_SESSION["Authorised"] = true;
+                    $_SESSION["LoggedIn"] = true;
                     echo "<meta http-equiv='refresh' content='0; url=../Wines.php'>"; 
                     
                 }
