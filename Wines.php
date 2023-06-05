@@ -54,6 +54,7 @@
                <option value="Alcohol Content(Highest - Lowest)" id="SortByCarType">Sort by Alcohol Content(Highest - Lowest)</option>
                <option value="Alcohol Content(Lowest - Highest)" id="SortByCarType">Sort by Alcohol Content(Lowest - Highest)</option>
             </select>
+            
 
                <!-- <script>
                const selectElement = document.getElementById("filter-select-sort");
@@ -63,6 +64,7 @@
                </script> -->
              </div>
              <div>
+                <button class="refine" onclick="PageLoad()">Reset Filters</button><br>
                 <button id="Refine" class="refine" onclick="refine()">Refine</button><br>
                 <button id="insertWine" class="refine" onclick="showForm()">Insert Wine</button>
                 <br>
@@ -118,7 +120,6 @@
         <div class="loading">
           <div class="loading-container"></div>
         </div> 
-        <script src ="js/Search_bar.js" ></script>
         <footer>
             <?php include("./globals/footer.php")?>
         </footer>
