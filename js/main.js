@@ -44,7 +44,7 @@ function PageLoad(){
     //I am using asynchronous because we want the cars to show as soons as the age is loaded.
     //2. create request
     var url = "../COS221/globals/api.php";
-    request.open("POST",url,true);
+    request.open("POST",url,false);
     request.setRequestHeader("Content-type", "application/json");
     request.onreadystatechange = function(){
         if(request.readyState==4 && request.status == 200){
@@ -200,7 +200,7 @@ function showForm() {
     type: "getWinery",
     return: "*",
   });
-  request.open("POST", "http://localhost/5-31/API_Wines.php", false);
+  request.open("POST", "../COS221/globals/api.php", false);
   var wineries = [];
   request.onreadystatechange = function () {
     if (request.readyState == 4 && request.status == 200) {
@@ -559,7 +559,7 @@ function showForm() {
       return: "*",
     });
 
-    request.open("POST", "http://localhost/5-31/API_Wines.php", false);
+    request.open("POST", "../COS221/globals/api.php", false);
     request.onreadystatechange = function () {
       if (request.readyState == 4 && request.status == 200) {
         let Q1 = JSON.parse(request.responseText);
@@ -577,7 +577,7 @@ function showForm() {
       return: "*",
     });
 
-    request1.open("POST", "http://localhost/5-31/API_Wines.php", false);
+    request1.open("POST", "../COS221/globals/api.php", false);
     request1.onreadystatechange = function () {
       if (request1.readyState == 4 && request1.status == 200) {
         let Q1 = JSON.parse(request1.responseText);
@@ -650,7 +650,7 @@ function showForm() {
         wpH: pH
       });
       console.log(insertBody);
-      req.open("POST", "http://localhost/5-31/API_Wines.php", false);
+      req.open("POST", "../COS221/globals/api.php", false);
       req.onreadystatechange = function () {
         if (req.readyState == 4 && req.status == 200) {
           let Q1 = JSON.parse(req.responseText);
@@ -662,7 +662,9 @@ function showForm() {
             var subDiv = document.getElementById("buttonContainer");
             mainDiv.innerHTML = "";
             subDiv.innerHTML = "";
-            PageLoad();
+            setTimeout(function() {
+                location.reload();
+            }, 500);
           }
         } else {
           console.log("Error");
@@ -670,6 +672,7 @@ function showForm() {
       };
       req.send(insertBody);
     }
+    PageLoad();
   });
 
   // Create clearfix div for buttons
@@ -792,7 +795,7 @@ function updateWine() {
         price: price,
         image: newImage
       });
-      req.open("POST", "http://localhost/5-31/API_Wines.php", false);
+      req.open("POST", "../COS221/globals/api.php", false);
       req.onreadystatechange = function () {
         if (req.readyState == 4 && req.status == 200) {
           let Q1 = JSON.parse(req.responseText);
@@ -804,7 +807,9 @@ function updateWine() {
             var subDiv = document.getElementById("buttonContainer");
             mainDiv.innerHTML = "";
             subDiv.innerHTML = "";
-            PageLoad();
+            setTimeout(function() {
+                location.reload();
+              }, 500); 
           }
         } else {
           console.log("Error");
@@ -836,154 +841,6 @@ function updateWine() {
 
   form.appendChild(container);
   
-  formContainer.appendChild(form);
-}
-
-function deleteWine() {
-  var formContainer = document.getElementById("formContainer");
-  formContainer.innerHTML = "";
-
-  var bContainer = document.getElementById("buttonContainer");
-  bContainer.innerHTML = "";
-
-  var form = document.createElement("form");
-  form.action = "#";
-  form.method = "POST";
-  form.style.border = "1px solid #ccc";
-
-  var container = document.createElement("div");
-  container.className = "container";
-
-  var heading = document.createElement("p");
-  heading.className = "heading";
-  heading.textContent = "Delete a Wine";
-  container.appendChild(heading);
-
-  var description = document.createElement("p");
-  description.textContent =
-    "Please fill in the form below to delete a new wine.";
-  container.appendChild(description);
-
-  var hr = document.createElement("hr");
-  container.appendChild(hr);
-
-  var wineLabel = document.createElement("label");
-  wineLabel.htmlFor = "dWine";
-  wineLabel.textContent = "Wine ID:";
-  container.appendChild(wineLabel);
-
-  var wineInput = document.createElement("input");
-  wineInput.type = "text";
-  wineInput.id = "dWine";
-  wineInput.name = "dWine";
-  container.appendChild(wineInput);
-
-  var wineTypeLabel = document.createElement("label");
-  wineTypeLabel.htmlFor = "dType";
-  wineTypeLabel.textContent = "Wine Type:";
-  container.appendChild(wineTypeLabel);
-
-  var wineTypeSelect = document.createElement("select");
-  wineTypeSelect.id = "dType";
-  wineTypeSelect.name = "dType";
-
-  var wineTypeOptions = [
-    "Dessert Wine",
-    "Red Wine",
-    "White Wine",
-    "Rose Wine",
-    "Sparkling Wine",
-  ];
-
-  for (var i = 0; i < wineTypeOptions.length; i++) {
-    var option = document.createElement("option");
-    option.value = wineTypeOptions[i];
-    option.textContent = wineTypeOptions[i];
-    wineTypeSelect.appendChild(option);
-  }
-
-  container.appendChild(wineTypeSelect);
-  container.appendChild(document.createElement("br"));
-  container.appendChild(document.createElement("br"));
-
-  var clearButton = document.createElement("button");
-  clearButton.type = "button";
-  clearButton.className = "cancelbtn";
-  clearButton.textContent = "Clear";
-  clearButton.addEventListener("click", function () {
-    document.getElementById("dWine").value = "";
-    document.getElementById("dType").value = "";
-  });
-
-  var addButton = document.createElement("button");
-  addButton.type = "submit";
-  addButton.id = "btnSignUp";
-  addButton.name = "submit";
-  addButton.className = "signupbtn";
-  addButton.textContent = "Delete Wine";
-  addButton.addEventListener("click", function () {
-    event.preventDefault();
-    var wine = document.getElementById("dWine").value;
-    var type = document.getElementById("dType").value;
-    
-    if (wine == "" && document.getElementById("dType").selectedIndex == 0) {
-      alert("Please fill in all the required fields.");
-    } else {
-      let req = new XMLHttpRequest();
-      var updateBody = JSON.stringify({
-        type: "deleteWine",
-        wineID: wine,
-        wineType: type
-      });
-      req.open("POST", "http://localhost/5-31/API_Wines.php", false);
-      req.onreadystatechange = function () {
-        if (req.readyState == 4 && req.status == 200) {
-          let Q1 = JSON.parse(req.responseText);
-          if (
-            Q1.message == "Invalid wine type" ||
-            Q1.message == "Missing Wine Type" ||
-            Q1.message == "Something went wrong in deleting wines" ||
-            Q1.message == "Missing Parameters"
-          ) {
-            alert("There is an error when deleting a wine.");
-          } else if (Q1.message == "Wine deleted") {
-            alert("The delete was successful.");
-            var mainDiv = document.getElementById("formContainer");
-            var subDiv = document.getElementById("buttonContainer");
-            mainDiv.innerHTML = "";
-            subDiv.innerHTML = "";
-            PageLoad();
-          }
-        } else {
-          console.log("Error");
-        }
-      };
-      req.send(updateBody);
-    }
-  });
-  var goBackButton = document.createElement("button");
-  goBackButton.type = "button";
-  goBackButton.className = "backBtn";
-  goBackButton.textContent = "Go Back";
-  goBackButton.addEventListener("click", function () {
-    var mainDiv = document.getElementById("formContainer");
-    var subDiv = document.getElementById("buttonContainer");
-    mainDiv.innerHTML = "";
-    subDiv.innerHTML = "";
-  });
-
-  var clearfix = document.createElement("div");
-  clearfix.className = "clearfix";
-
-  clearfix.appendChild(clearButton);
-  clearfix.appendChild(addButton);
-  clearfix.appendChild(goBackButton);
-
-  var buttonContainer = document.getElementById("buttonContainer");
-  buttonContainer.appendChild(clearfix);
-
-  form.appendChild(container);
-
   formContainer.appendChild(form);
 }
 
