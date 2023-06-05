@@ -33,31 +33,38 @@
          <!--Filter Section-->
              <div id="search filter" class="filter-box">
              <input id="search-input" type="text" placeholder="Enter wine name" />
-            <button onclick="search()" type="button">Search</button>
-
+             <button onclick="refine()" type="button">Search</button>
              </div>
-            
              <div class="filter-box">
                <select id="filter-select-filter"  class="filter-select">
-                 <option value="" disabled selected>Sort</option>
-                 <option value="Price(Highest - Lowest)" id="SortByModel">Sort by Prices(Highest - Lowest)</option>
-                 <option value="Price(Lowest - Highest)" id="SortByBrand">Sort by Prices(Lowest - Highest)</option>
-                 <option value="Alcohol Content(Highest - Lowest)" id="SortByCarType">Sort by Alcohol Content(Highest - Lowest)</option>
-                 <option value="Alcohol Content(Lowest - Highest)" id="SortByCarType">Sort by Alcohol Content(Lowest - Highest)</option>
+                  <option value="" disabled selected>Filter</option>
+                  <option value="red">Red Wine</option>
+                  <option value="white">White Wine</option>
+                  <option value="rosé">Rosé Wine</option>
+                  <option value="sparkling">Sparkling Wine</option>
+                  <option value="dessert">Dessert wine</option>
+                  <option value="fortified">Fortified Wine</option>
                </select>  
              </div>
              <div class="filter-box">
-               <select id="filter-select-sort"  class="filter-select">
-                 <option value="" disabled selected>Sort</option>
-                 <option value="Price(Highest - Lowest)" id="SortByModel">Sort by Prices(Highest - Lowest)</option>
-                 <option value="Price(Lowest - Highest)" id="SortByBrand">Sort by Prices(Lowest - Highest)</option>
-                 <option value="Alcohol Content(Highest - Lowest)" id="SortByCarType">Sort by Alcohol Content(Highest - Lowest)</option>
-                 <option value="Alcohol Content(Lowest - Highest)" id="SortByCarType">Sort by Alcohol Content(Lowest - Highest)</option>
-               </select>  
+             <select id="filter-select-sort" class="filter-select">
+               <option value="" disabled selected>Sort</option>
+               <option value="Price(Highest - Lowest)" id="SortByModel">Sort by Prices(Highest - Lowest)</option>
+               <option value="Price(Lowest - Highest)" id="SortByBrand">Sort by Prices(Lowest - Highest)</option>
+               <option value="Alcohol Content(Highest - Lowest)" id="SortByCarType">Sort by Alcohol Content(Highest - Lowest)</option>
+               <option value="Alcohol Content(Lowest - Highest)" id="SortByCarType">Sort by Alcohol Content(Lowest - Highest)</option>
+            </select>
+
+               <!-- <script>
+               const selectElement = document.getElementById("filter-select-sort");
+               selectElement.addEventListener("click", () => {
+                  selectElement.options[0].disabled = true; // Disable the default option when clicked
+               });
+               </script> -->
              </div>
              <div>
                 <button id="Refine" class="refine" onclick="refine()">Refine</button><br>
-                <button id="Refine" class="refine" onclick="refine()">Update Wines</button>
+                <!-- <button id="Refine" class="refine" onclick="refine()">Update Wines</button> -->
              </div>
              
         </div>
@@ -102,7 +109,7 @@
         <div class="loading">
           <div class="loading-container"></div>
         </div> 
-        <!-- <script src ="js/Search_bar.js" ></script> -->
+        <script src ="js/Search_bar.js" ></script>
         <footer>
             <?php include("./globals/footer.php")?>
         </footer>
