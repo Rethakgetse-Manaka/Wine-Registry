@@ -38,8 +38,8 @@
                 $row = $result->fetch_assoc();
 
                 $pass = $row["Password"];
-                 $hash = hash('sha256',$password_1);
-                if($hash == $pass)
+                 
+                if($password_1 == $pass)
                 {
                     echo "<script type='text/javascript'>localStorage.setItem('AdminID','$admin_ID');</script>";
                     echo "<script type='text/javascript'>localStorage.setItem('Authorised',true);</script>";
