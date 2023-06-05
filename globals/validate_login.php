@@ -5,7 +5,7 @@
         // Retrieve the form data
         $National_ID = $_POST["National_ID"];
         $admin_ID = $_POST['Admin_ID'];
-        $password = $_POST['Password'];
+        $password_1 = $_POST['Password'];
 
         $validInput = false;
         if(strlen($National_ID) == 0)
@@ -18,10 +18,10 @@
         else if(strpos($admin_ID, " ") > -1){
             echo "<script type='text/javascript'>window.location='../admin-login.php';alert('Spaces are not allowed in admin ID');</script>";
         } 
-        else if(strlen($password) == 0){
+        else if(strlen($password_1) == 0){
             echo "<script type='text/javascript'>window.location='../admin-login.php';alert('You did not enter your password');</script>";
         }
-        else if(strpos($password, " ") > -1){
+        else if(strpos($password_1, " ") > -1){
             echo "<script type='text/javascript'>window.location='../admin-login.php';alert('Spaces are not allowed in your password');</script>";
         }
         else {
@@ -39,22 +39,25 @@
                 echo "<script>window.location='../admin-login.php';
                                 alert('User does not exist');
                         </script>";
-            } else {
-                if($row = $result->fetch_array(MYSQLI_ASSOC)){
-                    $pass = $row["Password"];
-                    if($password == $pass)
-                    {
-                        echo "<script>alert('You successfully logged in');</script>";
-                        $_SESSION["AdminID"] = $admin_ID;
-                        echo "<meta http-equiv='refresh' content='0; url=../Wines.php'>";     
-                    }
-                    else
-                    {
-                        echo "<script>window.location='../admin-login.php';
-                                alert('Incorrect Password');
-                        </script>"; 
-                    }
-                }    
+            } else {  
+                $row = $result->fetch_assoc();
+
+                $pass = $row["Password"];
+                 $hash = hash('sha256',$password_1);
+                if($hash == $pass)
+                {
+                    echo "<script>alert('You successfully logged in');</script>";
+                    $_SESSION["AdminID"] = $admin_ID;
+                    echo "<meta http-equiv='refresh' content='0; url=../Wines.php'>"; 
+                    
+                }
+                else
+                {
+                    echo "<script>window.location='../admin-login.php';
+                            alert('Incorrect Password');
+                    </script>"; 
+                }
+                
                 
             }
             $conn->close();

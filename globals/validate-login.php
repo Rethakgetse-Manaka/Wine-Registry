@@ -1,13 +1,11 @@
 <?php 
-    $email = "";
-    $password_1 = "";
-    $validated = false;
+    
     // Checking if information has been posted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Retrieve the form data
         $National_ID = $_POST["National_ID"];
         $email = $_POST['Email'];
-        $password = $_POST['Password'];
+        $password_1 = $_POST['Password'];
 
         $validInput = false;
         if(strlen($National_ID) == 0)
@@ -23,10 +21,10 @@
         else if(strpos($email, '@') === false){
             echo "<script type='text/javascript'>window.location='../login.php';alert('You need a @ in your email');</script>";
         }
-        else if(strlen($password) == 0){
+        else if(strlen($password_1) == 0){
             echo "<script type='text/javascript'>window.location='../login.php';alert('You did not enter your password');</script>";
         }
-        else if(strpos($password, " ") > -1){
+        else if(strpos($password_1, " ") > -1){
             echo "<script type='text/javascript'>window.location='../login.php';alert('Spaces are not allowed in your password');</script>";
         }
         else {
@@ -45,23 +43,24 @@
                                 alert('User does not exist');
                         </script>";
             } else {
-                if($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $row = $result->fetch_assoc();
+
+                $pass = $row["Password"];
+                 $hash = hash('sha256',$password_1);
+                if($hash == $pass)
+                {
+                    echo "<script>alert('You successfully logged in');</script>";
+                    $_SESSION["Email"] = $email;
+                    echo "<meta http-equiv='refresh' content='0; url=../Wines.php'>"; 
                     
-                    $pass = $row["Password"];
-                    if(password_verify($password,$pass))
-                    {
-                        echo "<script>alert('You successfully logged in');</script>";
-                        $_SESSION["Email"] = $email;
-                        echo "<meta http-equiv='refresh' content='0; url=../Wines.php'>"; 
-                        
-                    }
-                    else
-                    {
-                        echo "<script>window.location='../login.php';
-                                alert('Incorrect Password');
-                        </script>"; 
-                    }
                 }
+                else
+                {
+                    echo "<script>window.location='../login.php';
+                            alert('Incorrect Password');
+                    </script>"; 
+                }
+                
             }
             $conn->close();
         }
