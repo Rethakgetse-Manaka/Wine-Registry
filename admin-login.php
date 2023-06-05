@@ -19,9 +19,6 @@
                 <h1>Login</h1>
             </div>
             <div class="flex-input">
-                <input type="text" name="National_ID" id="National_ID" placeholder="ID Number" >
-            </div>
-            <div class="flex-input">
                 <input type="text" name="Admin_ID" id="admin_ID" placeholder="ADMIN ID" >
             </div>
             <div class = "flex-input">
