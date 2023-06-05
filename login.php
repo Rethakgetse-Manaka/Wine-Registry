@@ -41,7 +41,7 @@
 </body>
     <style>
         .login-container {
-            background-image: url("img/Login.jpg");
+            /* background-image: url("img/Login.jpg"); */
             background-repeat: no-repeat;
             background-size: cover;
             background-color: grey;
