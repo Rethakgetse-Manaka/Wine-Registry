@@ -451,7 +451,7 @@
                         break;
                     case "rose wine":
                         $sql = "INSERT INTO Rose_Wine(WineID,Percentage_Red,Percentage_White)
-                                VALUES (?,?)";
+                                VALUES (?,?,?)";
                         $stmt = $this->conn->prepare($sql);
                         $stmt->bind_param('sii', $wineID,$data->WineTypeValue->Percentage_Red,$data->WineTypeValue->Percentage_White);
                         $stmt->execute();
