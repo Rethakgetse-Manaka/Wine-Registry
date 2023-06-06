@@ -507,7 +507,7 @@
             }
         }
         public function generateWineryID(){
-            $prefix = 'W';
+            $prefix = 'WW';
             $id = 1;
             $existingIDs = [];
             $stmt = $this->conn->prepare('SELECT WineryID FROM Winery');
@@ -549,28 +549,105 @@
             }
         }
         public function updateWineries($data){
-
-            $sql = "UPDATE Winery SET ProductionSize = ?, Winemaker = ?, Image = ? WHERE WineryID = ?";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param('ssss',$data->productionSize,$data->winemaker,$data->image,$data->wineryID);
-            $stmt->execute();
-            $affectedRows = $stmt->affected_rows;
-            if ($affectedRows > 0) {
-                $this->response(true,"Winery updated");
-                exit();
+            $sql = "SELECT * FROM Winery WHERE Winery.WineryID = ?";
+            $stmt_1 = $this->conn->prepare($sql);
+            $stmt_1->bind_param('s', $data->wineryID);
+            $stmt_1->execute();
+            $result = $stmt_1->get_result();
+            if ($result->num_rows > 0) {
+                if ($data->productionSize=='' && $data->image=='' && $data->winemaker=='') {
+                    $this->response(false, "Nothing to update");
+                    exit();
+                }
+                $sql = "UPDATE Winery SET ";
+                $params = array();
+                $types = '';
+            
+                if ($data->productionSize!='') {
+                    $sql .= "ProductionSize = ?, ";
+                    $params[] = $data->productionSize;
+                    $types .= 's';
+                }
+            
+                if ($data->winemaker != '') {
+                    $sql .= "Winemaker = ?, ";
+                    $params[] = $data->winemaker;
+                    $types .= 's';
+                }
+            
+                if ($data->image != '') {
+                    $sql .= "Image = ?, ";
+                    $params[] = $data->image;
+                    $types .= 's';
+                }
+            
+                // Remove the trailing comma and space from the SQL query
+                $sql = rtrim($sql, ", ");
+            
+                // Append the WHERE clause
+                $sql .= " WHERE WineryID = ?";
+            
+                // Add the WineryID parameter
+                $params[] = $data->wineryID;
+                $types .= 's';
+            
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param($types, ...$params);
+                $stmt->execute();
+                $affectedRows = $stmt->affected_rows;
+            
+                if ($affectedRows > 0) {
+                    $this->response(true, "Winery updated");
+                    exit();
+                } else {
+                    $this->response(false, "Something went wrong");
+                    exit();
+                }
             }else{
-                $this->response(false,"Something went wrong");
+                $this->response(false,"Winery does not exist");
+                exit();
+            }
+            
+        }
+        public function filterWineries($data){
+            $sql = "SELECT Winery.WineryName,Winery.Image,Region.RegionName, Region.Country, Winery.Winemaker, Winery.ProductionSize, Grape_Varietal.VarietalName 
+                    FROM Winery
+                    INNER JOIN Region ON Winery.RegionID = Region.RegionID 
+                    JOIN Grape_Varietal ON Winery.VarietalID = Grape_Varietal.VarietalID
+                    WHERE Grape_Varietal.VarietalName = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('s', $data->varietal);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $wines = array();
+                while ($row = $result->fetch_assoc()) {
+                    $wines[] = $row;
+                }
+                $this->response(true, "Wines Found",$wines);
+                exit();
+            } else {
+                $this->response(false, "No wines found");
                 exit();
             }
         }
         public function deleteWineries($data){
+            $checkWineryExists = "SELECT WIneryID from Wine Where WineryID = ?";
+            $stmt = $this->conn->prepare($checkWineryExists);
+            $stmt->bind_param('s',$data->wineryID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows <= 0) {
+                $this->response(false,"Winery doesn't exist");
+                exit();
+            }
             $checkforWinesWithWineries = "SELECT WIneryID from Wine Where WineryID = ?";
             $stmt = $this->conn->prepare($checkforWinesWithWineries);
             $stmt->bind_param('s',$data->wineryID);
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
-                $this->response(false,"Winery has wines associated with it");
+                $this->response(true,"Winery has wines associated with it");
                 exit();
             }else{
                 $sql = "DELETE FROM Winery Where WineryID = ?";
@@ -797,6 +874,12 @@
                         $API->response(false,"Missing Parameters");
                     }
                     break;
+                case "FilterWineries":
+                    if(isset($data->varietal)){
+                        $API->FilterWineries($data);
+                    }else{
+                        $API->response(false,"Missing Parameters");
+                    }
                 default:
                     $API->response(false,"Invalid Action");
                     break;
