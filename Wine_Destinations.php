@@ -14,22 +14,22 @@
       #brand-section {
       background-color: #520101f6;
       padding: 50px;
-      background-image: url("img/homepage.jpg");
+      /* background-image: url("img/homepage.jpg"); */
       background-repeat:no-repeat;
       background-size: cover;
   }
+
+  .text{
+    margin-top: 20px;
+    font-family: "Body-Font";
+    font-weight:500;
+    font-stretch: normal;
+    font-size: 20px;
+  }
   </style>
-  <script src ="js/Brands.js" defer></script>
+  <script src ="js/winery.js" defer></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 </head>
-<?php 
-        // if(isset($_COOKIE['theme'])&& $_COOKIE['theme'] == 'light' && isset($_COOKIE['api_key'])){
-        //   echo "<body class='light-theme' onload='BrandsLoad();applyTheme(\"".$_COOKIE['theme']."\")'>";
-
-        // }else{
-        //     echo "<body onload='BrandsLoad()'>";
-        // }
-       ?>
     <!--Navbar-->
     <?php include('./globals/header.php')?>
 
@@ -37,13 +37,14 @@
     <div class = "Models-Layout">
       <div class="Intro">
             <div id="Intro-Heading" class="writing">
-               <h1 class="writing">We collaborate with premier wineries across the globe.</h1>
+               <h1 class="writing">We collaborate with premier wineries across the globe</h1>
             </div>
             <img id="landing-image" src="img/Winery.jpg" alt="picture of wines">
         </div>
+        <p class = "text" >Filter By: </p>
         <div class="filter-box">
-          Filter By: 
-               <select id="filter-select-sort"  class="filter-select">
+
+               <select id="filter-select-sort"  class="refine">
                  <option value="default" disabled selected>Grape Varietal:</option>
                  <option value="Cabernet Sauvignon" id="SortByModel">Cabernet Sauvignon</option>
                  <option value="Chenin Blanc" id="SortByBrand">Chenin Blanc</option>
@@ -70,20 +71,21 @@
                  <option value="Tokaji" id="SortByBrand">Tokaji</option>
                  <option value="Viognier" id="SortByBrand">Viognier</option>
                  <option value="Zinfandel" id="SortByBrand">Zinfandel</option>
-
                </select>  
         </div>
-        <div>
-          <button id="Refine" class="refine" onclick="refine()">Refine</button><br>
-          <button id="Refine" class="refine" onclick="window.location.href = 'addWine.php'">Add a Winery</button>
+        <div class="filter-box">
+          <button id="Refine" class="refine" onclick="window.location.href = 'updateWine.php'">Update a Winery</button>
         </div>
+        <div class="filter-box">
+        <button id="Refine" class="refine" onclick="window.location.href = 'addWine.php'">Add a Winery</button>
+        </div>
+          
+        
       </div>
-    <div class="loading">
-      <div class="loading-container"></div>
     </div>    
-    <!-- <section id="brand-section">
+    <section id="brand-section">
      <div class="brand-wrapper">
-      <div class="brand">
+      <!-- <div class="brand">
         <img src="img/Winery1.jpg" alt="Winery">
         <h3>Lavaux vineyards, Switzerland</h3>
         <li>Winemaker: Liam King</li>
@@ -109,9 +111,13 @@
         <li>Grape Varetal: Sangiovese</li>
         <a href="#" style="text-decoration: underline;">Learn more about grape varietal?</a>
         <a href="#" style="text-decoration: underline;">Visit Website</a>
+      </div> -->
       </div>
-      </div>
-   </section> -->
+   </section>
+   <div class="loading">
+          <div class="loading-container"></div>
+        </div> 
+        <script src ="js/Search_bar.js" ></script>
    <footer>
       <?php include("./globals/footer.php")?>
    </footer>
