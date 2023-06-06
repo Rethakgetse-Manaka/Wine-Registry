@@ -10,9 +10,16 @@ winemaker.addEventListener("keyup", winemakerNameValidate);
 var vineyard = document.getElementById("vineyard");
 vineyard.addEventListener("keyup", vineyardValidate);
 
-function winderyIDValidation(){
-    const numReg = /^[0-9]+$/;
+var image = document.getElementById("image");
 
+
+function winderyIDValidation(){
+    const numReg = /^(WW)?[0-9]+$/;
+    if(wineryid.value === ""){
+        document.getElementById("demo1").style.color = "red"; 
+        document.getElementById("demo1").innerHTML = "Winery ID must be filled in!";       
+        return false;
+    }
     if(wineryid.value.match(numReg))
     {
         document.getElementById("demo1").style.color = "green"; 
@@ -28,7 +35,9 @@ function winderyIDValidation(){
 
 function productSizeValidation(){
     const numReg = /^[0-9]+$/;
-
+    if(productSize.value === ""){
+        return true;
+    }
     if(productSize.value.match(numReg))
     {
         document.getElementById("demo2").style.color = "green"; 
@@ -44,7 +53,9 @@ function productSizeValidation(){
 
 function winemakerNameValidate(){
     const nameReg = /^[A-Za-z ]{2,}(?:[-'][A-Za-z ]+)*$/;
-
+    if(winemaker.value === ""){
+        return true;
+    }
     if(winemaker.value.match(nameReg)){
         document.getElementById("demo4").style.color = "green"; 
         document.getElementById("demo4").innerHTML = "Valid name input.";
@@ -59,13 +70,10 @@ function winemakerNameValidate(){
 
 function vineyardValidate(){
     const addressReg = /^[A-Za-z0-9\s\.,'-]{2,}$/;
-
-    if(vineyard.value === "")
-    {
-        document.getElementById("demo3").style.color = "red"; 
-        document.getElementById("demo3").innerHTML = "Vineyard must be filled out!"; 
-        return false;      
-    }else if (vineyard.value.match(addressReg)){
+    if(vineyard.value === ""){
+        return true;
+    }
+    if (vineyard.value.match(addressReg)){
         document.getElementById("demo4").style.color = "green"; 
         document.getElementById("demo4").innerHTML = "Valid vineyard input.";
         return true;
@@ -79,12 +87,12 @@ function vineyardValidate(){
 function overallValidate()
 {
     var isFormValid = true; 
-    
+    var isWineryIDValid = winderyIDValidation();
     var isProductSizeValid = productSizeValidation();
     var isWinemakerNameValid = winemakerNameValidate();
     var isVineyardValid = vineyardValidate();
 
-    if (!isProductSizeValid ||!isWinemakerNameValid || !isVineyardValid)
+    if (!isProductSizeValid ||!isWinemakerNameValid || !isVineyardValid || !isWineryIDValid)
     {
         isFormValid = false;
     }
@@ -92,10 +100,7 @@ function overallValidate()
     if (isFormValid) {
         //alert("success");
         //update the winery.
-        var body = JSON.stringify({
-            "type": "getWinery",
-            "return":"*"
-        })
+        updateWinery();
         return true;
     } else {
         //testing purposes
@@ -112,7 +117,33 @@ function overallValidate()
 }
 
 function clearAll() {
-    wineryID.value = "";
+    wineryid.value = "";
     productSize.value = "";
     winemaker.value = "";
+    vineyard.value = "";
+    image.value = "";
   }
+
+  function updateWinery(){
+    var body = JSON.stringify({
+        "type": "updateWinery",
+        "wineryID":wineryID.value,
+        "vineyard": vineyard.value,
+        "productionSize": productSize.value,
+        "winemaker": winemaker.value,
+        "image" : image.value
+    })
+    console.log(body);
+    let request = new XMLHttpRequest();
+    var url = "http://localhost/COS221-Website/globals/API_Wines.php";
+    request.open("POST",url,false);
+    request.setRequestHeader("Content-type", "application/json");
+    request.onreadystatechange = function(){
+        if(request.readyState==4 && request.status == 200){
+            console.log("Winery updated");
+        }else{
+            console.log("Error:"+request.responseText.message);
+        }
+    }
+    request.send(body);  
+}

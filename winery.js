@@ -1,3 +1,47 @@
+document.getElementById('filter-select-sort').addEventListener('change', refineWineries);
+function refineWineries(){
+    const carlist = document.querySelector('.brand-wrapper');
+    carlist.innerHTML = '';
+    var varietal = document.getElementById('filter-select-sort').value;
+    //1. Create the XMLHttpRequest Object
+    let request = new XMLHttpRequest();
+    var body = JSON.stringify({
+                "type":"FilterWineries",
+                "varietal": varietal
+        })
+    console.log(body);
+    //I am using asynchronous because we want the cars to show as soons as the age is loaded.
+    //2. create request
+    var url = "http://localhost/COS221-Website/globals/API_Wines.php";
+    request.open("POST",url,true);
+    request.setRequestHeader("Content-type", "application/json");
+    request.onreadystatechange = function(){
+        if(request.readyState==4 && request.status == 200){
+            console.log(JSON.parse(request.responseText).data[0]);
+            let Q1=JSON.parse(request.responseText);
+            var cars = Q1.data;
+            if(cars.length == 0){
+                const html = `<h2>Sorry seems like we don't have what you're looking for in stock<h2>`
+                carlist.insertAdjacentHTML('beforeend',html);
+            }else{
+                for(let i=0; i<Q1.data.length; i++){
+                    const html = `<div class="brand">
+                        <img class="wineimage" src="${Q1.data[i]['Image']}" alt="${Q1.data[i]['WineryName']}">
+                        <h2>${Q1.data[i]['WineryName']},${Q1.data[i]['Country']}</li> </h2>
+                        <li>Winemaker: ${Q1.data[i]['Winemaker']}</li>
+                        <li>Production Size: ${Q1.data[i]['ProductionSize']}ml</li>
+                        <li>Grape Varietal: ${Q1.data[i]['VarietalName']}</li>
+                    </div>`
+                    carlist.insertAdjacentHTML('beforeend',html);
+               } 
+            }
+        }else{
+            console.log("Error:"+request.responseText.message);
+        }
+    }
+    request.send(body);
+   
+}
 //Asynchronous call used.
 window.addEventListener("load" , ()=>{
     const loading = document.querySelector(".loading");
@@ -33,6 +77,7 @@ function getCookieValue(cookieName) {
 function PageLoad(){
     showloading();
     const carlist = document.querySelector('.brand-wrapper');
+    carlist.innerHTML = '';
     //1. Create the XMLHttpRequest Object
     let request = new XMLHttpRequest();
     var body = JSON.stringify({
@@ -42,7 +87,7 @@ function PageLoad(){
 
     //I am using asynchronous because we want the cars to show as soons as the age is loaded.
     //2. create request
-    var url = "../COS221/globals/API_Wines.php";
+    var url = "http://localhost/COS221-Website/globals/API_Wines.php";
     request.open("POST",url,true);
     request.setRequestHeader("Content-type", "application/json");
     request.onreadystatechange = function(){
@@ -95,59 +140,7 @@ function refine(){
     }
     
 
-    if(filterby == "Cabernet Sauvignon") {
-        filter = "Cabernet Sauvignon";
-    } else if(filterby == "Cinsault"){
-        filter = "Cinsault";
-    } else if(filterby == "Grenache"){
-        filter = "Grenache";
-    } else if(filterby == "Mourvèdre"){
-        filter = "Mourvèdre";
-    } else if(filterby == "Pedro Ximénez"){
-        filter = "Pedro Ximénez";
-    } else if(filterby == "Pinot Noir"){
-        filter = "Pinot Noir";
-    }else if(filterby == "Sangiovese"){
-        filter = "Sangiovese";
-    } else if(filterby == "Shiraz"){
-        filter = "Shiraz";
-    } else if(filterby == "Zinfandel"){
-        filter = "Zinfandel";
-    } else if(filterby == "Chenin Blanc"){
-        filter = "Chenin Blanc";
-    } else if(filterby == "Gamay"){
-        filter = "Gamay";
-    }else if(filterby == "Icewine"){
-        filter = "Icewine";
-    } else if(filterby == "Muscat"){
-        filter = "Muscat";
-    } else if(filterby == "Pinot Grigio"){
-        filter = "Pinot Grigio";
-    } else if(filterby == "Pinot Noir"){
-        filter = "Pinot Noir";
-    } else if(filterby == "Provence"){
-        filter = "Provence";
-    }else if(filterby == "Sauternes"){
-        filter = "Sauternes";
-    } else if(filterby == "Tokaji"){
-        filter = "Tokaji";
-    } else if(filterby == "Chardonnay"){
-        filter = "Chardonnay";
-    } else if(filterby == "Sauvignon Blanc"){
-        filter = "Sauvignon Blanc";
-    } else if(filterby == "Gewürztraminer"){
-        filter = "Gewürztraminer";
-    }else if(filterby == "Malbec"){
-        filter = "Malbec";
-    }else if(filterby == "Nebbiolo"){
-        filter = "Nebbiolo";
-    } else if(filterby == "Pinot Meunier"){
-        filter = "Pinot Meunier";
-    } else if(filterby == "Riesling"){
-        filter = "Riesling";
-    } else if(filterby == "Viognier"){
-        filter = "Viognier";
-    }
+    
 
     console.log(prebody);
     const body = JSON.stringify(prebody);
@@ -197,4 +190,4 @@ function toggleActive() {
   }
   
   const links = document.querySelectorAll('.nav-link'); // get all the nav links
-  links.forEach(link => link.addEventListener('click', toggleActive)); // add event listener to each link 
+  links.forEach(link => link.addEventListener('click', toggleActive)); // a

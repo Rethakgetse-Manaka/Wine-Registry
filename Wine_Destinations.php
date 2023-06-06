@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brands</title>
+    <title>Wine Destinations</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" 
     integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" 
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -39,13 +39,11 @@
             <div id="Intro-Heading" class="writing">
                <h1 class="writing">We collaborate with premier wineries across the globe</h1>
             </div>
-            <img id="landing-image" src="img/Winery.jpg" alt="picture of wines">
+            <!-- <img id="landing-image" src="img/Winery.jpg" alt="picture of wines"> -->
         </div>
-        <p class = "text" >Filter By: </p>
-        <div class="filter-box">
-
+      
                <select id="filter-select-sort"  class="refine">
-                 <option value="default" disabled selected>Grape Varietal:</option>
+                 <option value="default" disabled selected>Filter By</option>
                  <option value="Cabernet Sauvignon" id="SortByModel">Cabernet Sauvignon</option>
                  <option value="Chenin Blanc" id="SortByBrand">Chenin Blanc</option>
                  <option value="Chardonnay" id="SortByBrand">Chardonnay</option>
@@ -74,12 +72,17 @@
                </select>  
         </div>
         <div class="filter-box">
+          <button id="Refine" class="refine" onclick="PageLoad()">Reset</button>
+        </div>
+        <div class="filter-box">
           <button id="Refine" class="refine" onclick="window.location.href = 'updateWine.php'">Update a Winery</button>
         </div>
         <div class="filter-box">
         <button id="Refine" class="refine" onclick="window.location.href = 'addWine.php'">Add a Winery</button>
         </div>
-          
+        <div class="filter-box">
+        <button id="Refine" class="refine" onclick="window.location.href = 'DeleteWinery.php'">Delete a Winery</button>
+        </div>  
         
       </div>
     </div>    
@@ -123,4 +126,3 @@
    </footer>
 </body>
 </html>
-
