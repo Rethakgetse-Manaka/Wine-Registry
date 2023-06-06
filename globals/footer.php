@@ -18,11 +18,11 @@
             <ul>
                 <li><a href="">Address: 123 Main Street Anytown, USA 12345</a></li>
                 <li><a href="">Phone: +1 (555) 867-5309</a></li>
-                <li><a href="">Email: WineCompany@wine.com</a></li>
+                <li><a href="">Email: desVins@wine.com</a></li>
             </ul>
         </div>
     </section>
-    <section class="copyright">Copyright &copy; Company Name 2022</section>
+    <section class="copyright">Copyright &copy; La Maison des Vins 2023</section>
 </footer>
 
 
