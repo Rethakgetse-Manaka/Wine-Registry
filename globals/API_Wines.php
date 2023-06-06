@@ -260,8 +260,27 @@
                 exit();
             }
         }
-        public function getWineID($value){
-
+        public function VarietalID($value){
+            $stmt = $this->conn->prepare('SELECT VarietalID FROM Grape_Varietal Where VarietalName = ?');
+            $stmt->bind_param('s', $value);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                return $result->fetch_all(MYSQLI_ASSOC);
+            }else{
+                return "Doesn't exist";
+            }
+        }
+        public function getRegionID($value){
+            $stmt = $this->conn->prepare('SELECT RegionID FROM Region Where RegionName = ?');
+            $stmt->bind_param('s', $value);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                return $result->fetch_all(MYSQLI_ASSOC);
+            }else{
+                return "Doesn't exist";
+            }
         }
         public function getWineries($data){
             //Searching of getWines
@@ -308,23 +327,44 @@
                 $this->response(true,"Reviews retrieved",$result->fetch_all(MYSQLI_ASSOC));
                 exit();
             }else{
-                $this->response(true,"Something went wrong");
+                $this->response(true,"No reviews",[]);
                 exit();
             }
 
         }
-        public function addReviews($data){
-            $sql = "INSERT INTO Reviews (WineID,UserID,Rating,Comment) VALUES (?,?,?,?)";
+        public function addReviews($data) {
+            $sql ="SELECT * FROM Reviews WHERE userID = ? AND WineID =? ";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param('ssss', $data->WineID,$data->UserID,$data->Rating,$data->Comment);
+            $stmt->bind_param('ss', $data->UserID,$data->WineID);
             $stmt->execute();
             $result = $stmt->get_result();
             if($result->num_rows>0){
-                $this->response(true,"Review added",$result->fetch_all(MYSQLI_ASSOC));
-                exit();
+                $sql = "UPDATE Reviews SET Comment =?,Rating =? WHERE userID = ? AND WineID =?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param('siss', $data->Comment,$data->Rating,$data->UserID,$data->WineID);
+                $stmt->execute();
+                // $result = $stmt->get_result();
+                if($stmt){
+                    $this->response(true,"Review updated",$result->fetch_all(MYSQLI_ASSOC));
+                    exit();
+                }else{
+                    $this->response(false,"Something went wrong");
+                    exit();
+                }
+
             }else{
-                $this->response(false,"Something went wrong");
-                exit();
+                $sql = "INSERT INTO Reviews (WineID,UserID,Rating,Comment) VALUES (?,?,?,?)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param('ssis', $data->WineID,$data->UserID,$data->Rating,$data->Comment);
+                $stmt->execute();
+                // $result = $stmt->get_result();
+                if($stmt){
+                    $this->response(true,"Review added",$result->fetch_all(MYSQLI_ASSOC));
+                    exit();
+                }else{
+                    $this->response(false,"Something went wrong");
+                    exit();
+                }
             }
         }
         public function AdminLogin($data){
@@ -363,6 +403,18 @@
         }
         private function checkWineExists($value){
             $sql = "SELECT * FROM Wine WHERE Wine.Name = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('s', $value);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows>0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        private function checkWineryExists($value){
+            $sql = "SELECT * FROM Winery WHERE Winery.WineryName = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('s', $value);
             $stmt->execute();
@@ -453,6 +505,87 @@
                 $this->response(false,"Something went wrong in deleting wines");
                 exit();
             }
+        }
+        public function generateWineryID(){
+            $prefix = 'W';
+            $id = 1;
+            $existingIDs = [];
+            $stmt = $this->conn->prepare('SELECT WineryID FROM Winery');
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $existingIDs[] = $row['WineryID'];
+                }
+            }
+            // Find the next available ID
+            while (in_array($prefix . str_pad($id, 3, '0', STR_PAD_LEFT), $existingIDs)) {
+                $id++;
+            }
+            // Generate the unique WineID
+            $wineID = $prefix . str_pad($id, 3, '0', STR_PAD_LEFT);
+            return $wineID;
+        }
+        public function insertWineries($data){
+            if($this->checkWineryExists($data->wineryName)){
+                $this->response(false,"Winery already exists");
+                exit();
+            }
+            $wineryID = $this->generateWineryID();
+            $varietalID = $this->VarietalID($data->varietal)[0]['VarietalID'];
+            $regionID = $this->getRegionID($data->region)[0]['RegionID'];
+            $sql = "INSERT INTO Winery (WineryID,WineryName, Licensed, ProductionSize, Vineyard, Winemaker, VarietalID, RegionID,Image)
+                    VALUES (?,?,?,?,?,?,?,?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('ssissssss',$wineryID,$data->wineryName,$data->licensed,$data->productionSize,$data->vineyard,$data->winemaker,$varietalID,$regionID,$data->image);
+            $stmt->execute();
+            $affectedRows = $stmt->affected_rows;
+            if ($affectedRows > 0) {
+                $this->response(true,"Winery inserted");
+                exit();
+            }else{
+                $this->response(false,"Something went wrong");
+                exit();
+            }
+        }
+        public function updateWineries($data){
+
+            $sql = "UPDATE Winery SET ProductionSize = ?, Winemaker = ?, Image = ? WHERE WineryID = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('ssss',$data->productionSize,$data->winemaker,$data->image,$data->wineryID);
+            $stmt->execute();
+            $affectedRows = $stmt->affected_rows;
+            if ($affectedRows > 0) {
+                $this->response(true,"Winery updated");
+                exit();
+            }else{
+                $this->response(false,"Something went wrong");
+                exit();
+            }
+        }
+        public function deleteWineries($data){
+            $checkforWinesWithWineries = "SELECT WIneryID from Wine Where WineryID = ?";
+            $stmt = $this->conn->prepare($checkforWinesWithWineries);
+            $stmt->bind_param('s',$data->wineryID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $this->response(false,"Winery has wines associated with it");
+                exit();
+            }else{
+                $sql = "DELETE FROM Winery Where WineryID = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param('s',$data->wineryID);
+                $stmt->execute();
+                $affectedRows = $stmt->affected_rows;
+                if ($affectedRows > 0) {
+                    $this->response(true,"Winery deleted");
+                    exit();
+                }else{
+                    $this->response(false,"Something went wrong");
+                    exit();
+                }
+            }   
         }
         public function insertWines($data){
             if($this->checkWineExists($data->wName)){
@@ -636,6 +769,30 @@
                     //Add validation
                     if(isset($data->wineID)){
                         $API->deleteWines($data);
+                    }else{
+                        $API->response(false,"Missing Parameters");
+                    }
+                    break;
+                case "insertWinery":
+                    //Add validation
+                    if(isset($data->wineryName,$data->licensed,$data->productionSize,$data->vineyard,$data->winemaker,$data->varietal,$data->region,$data->image)){
+                        $API->insertWineries($data);
+                    }else{
+                        $API->response(false,"Missing Parameters");
+                    }
+                    break;
+                case "updateWinery":
+                    //Add validation
+                    if(isset($data->wineryID,$data->productionSize,$data->winemaker,$data->image)){
+                        $API->updateWineries($data);
+                    }else{
+                        $API->response(false,"Missing Parameters");
+                    }
+                    break;
+                case "deleteWinery":
+                    //Add validation
+                    if(isset($data->wineryID)){
+                        $API->deleteWineries($data);
                     }else{
                         $API->response(false,"Missing Parameters");
                     }
