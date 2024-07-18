@@ -1,3 +1,2 @@
-# Practical_Assignment_5_COS221
-This git repository is for Monica, Retha, Kamo, Kabelo and Victor. This git repository should be used for the COS221 Practical Assignment.
-//Wine Types and Categories research: Monica
+# Wine Registry Website
+WineRegistry is a comprehensive platform, developed using PHP, JavaScript, and CSS, tailored for wine vineyards to manage their collections efficiently. It allows users to add, remove, update, and create wine entries, ensuring accurate and up-to-date inventories. With features like detailed wine descriptions, vintage information, and organized collections, WineRegistry simplifies inventory tracking and enhances organization. Designed with an intuitive interface, it caters to both novices and experts, providing a seamless user experience. Focus on producing exceptional wines while WineRegistry handles your inventory management needs. Join WineRegistry and elevate your vineyard's wine management today.
